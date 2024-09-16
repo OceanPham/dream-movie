@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { Helmet } from "react-helmet";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+
+      <Helmet>
+        <title>Dream Movie</title>
+      </Helmet>
+      <div
+        style={{
+          backgroundImage: "url(/assets/images/background.webp)",
+          height: "100vh !important"
+        }}
+        className="w-100 d-flex justify-content-center image_Background">
+
+        <div
+          className=" d-flex flex-wrap fw-bold fs-2 justify-content-center align-items-center pb-5 text-danger"
+          style={{ background: "rgb(118 212 252 / 62%)", borderRadius: "8px" }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <div className="text-center w-100 mt-5">
+            <img src="/assets/images/logo.png" width={100} alt="logo" className="rounded-circle" />
+          </div>
+          <div className=" text-center">
+            Hello! We are Dream Movie
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
