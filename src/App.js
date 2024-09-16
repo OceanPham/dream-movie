@@ -12,10 +12,10 @@ function App() {
           backgroundImage: "url(/assets/images/background.webp)",
           height: "100vh !important"
         }}
-        className="w-100 d-flex justify-content-center image_Background">
+        className="w-100 d-flex justify-content-center  align-items-center image_Background">
 
         <div
-          className=" d-flex flex-wrap fw-bold fs-2 justify-content-center align-items-center pb-5 text-danger"
+          className=" d-flex h-25 flex-wrap fw-bold fs-2 justify-content-center align-items-center pb-5 text-danger"
           style={{ background: "rgb(118 212 252 / 62%)", borderRadius: "8px" }}
         >
           <div className="text-center w-100 mt-5">
