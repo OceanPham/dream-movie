@@ -1,0 +1,21 @@
+$primary-color: #3F91F5;
+$online: #00DC16;
+
+.main_header {
+    height: 9vh;
+
+    .main_logo {
+        border-radius: 20%;
+    }
+
+    .main_name {
+        color: $primary-color;
+    }
+
+    .dot_status {
+        color: $online;
+        position: absolute;
+        left: 25px;
+        bottom: -7px;
+    }
+}

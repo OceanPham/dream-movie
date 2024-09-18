@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/css/style.css'
+import './assets/style/style.css'
+import Home from './views/pages/Dashboard/Home';
+import { ToastContainer } from 'react-toastify';
 
+const LazyApp = lazy(() => import('./App'))
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <LazyApp />
+    <ToastContainer newestOnTop />
+
   </React.StrictMode>
 );
 
