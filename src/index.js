@@ -1,11 +1,8 @@
 import React, { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-// Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/style/style.css'
-import Home from './views/pages/Dashboard/Home';
 import { ToastContainer } from 'react-toastify';
 
 const LazyApp = lazy(() => import('./App'))

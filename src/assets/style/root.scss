@@ -1,7 +1,10 @@
 $primary-color: #3F91F5;
 $online: #00DC16;
 
-.main_header {
+.root{
+    background: #000;
+}
+.main_sideBar {
     height: 9vh;
 
     .main_logo {
@@ -10,12 +13,30 @@ $online: #00DC16;
 
     .main_name {
         color: $primary-color;
+        font-size: 18px;
     }
 
+   
+}
+
+// .main_sideBar{
+//     background: #3F91F5;
+//     position: relative;
+// }
+
+.main_header{
     .dot_status {
         color: $online;
         position: absolute;
-        left: 25px;
-        bottom: -7px;
+        left: 20px;
+        bottom: 0px;
     }
+}
+  
+.main_layout{
+    background: rgba(128, 181, 245, 0.16);
+}
+
+.custom_icon_sidebar{
+    font-size: 23px !important;
 }
