@@ -1,0 +1,52 @@
+
+  .loading-dots {
+    display: flex;
+    align-items: center;
+  }
+  
+  @keyframes scaling {
+    0%,
+    100% {
+      transform: scale(0.2);
+      background-color: #df222f;
+    }
+    40% {
+      transform: scale(1);
+      background-color: #d27a20;
+    }
+    50% {
+      transform: scale(1);
+      background-color: #7eac13;
+    }
+  }
+  
+  .loading-dots span {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    transform: scale(0);
+    background-color: red;
+    animation: scaling 1.5s ease-in-out infinite;
+    display: inline-block;
+    margin: 0.3rem;
+  }
+  
+  .loading-dots span:nth-child(0) {
+    animation-delay: 0s;
+  }
+  .loading-dots span:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+  .loading-dots span:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+  .loading-dots span:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+  .loading-dots span:nth-child(4) {
+    animation-delay: 0.8s;
+  }
+  .loading-dots span:nth-child(5) {
+    animation-delay: 1s;
+  }
+  

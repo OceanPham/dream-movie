@@ -11,7 +11,7 @@ import Login from "../Auth/Login";
 import Logout from "../Auth/Logout";
 import SignUp from "../Auth/SignUp";
 import ExportTicket from "../views/pages/Dashboard/ExportTicket";
-import Employee from "../views/pages/Managers/employees";
+import ChairCategory from "../views/pages/Managers/ChairCategory";
 
 const AppRouter = () => {
   return (
@@ -50,15 +50,31 @@ const AppRouter = () => {
         path="/manager/employee"
         element={
           <PrivateRoute>
-            <Employee />
+            <ChairCategory />
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/chairCategory"
+        element={
+          // <PrivateRoute>
+          <ChairCategory />
+          // </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/chairCategory/:alias"
+        element={
+          // <PrivateRoute>
+          <ChairCategory />
+          // </PrivateRoute>
         }
       />
       <Route
         path="/manager/movie"
         element={
           <PrivateRoute>
-            <Employee />
+            <ChairCategory />
           </PrivateRoute>
         }
       />
@@ -66,7 +82,7 @@ const AppRouter = () => {
         path="/manager/food"
         element={
           <PrivateRoute>
-            <Employee />
+            <ChairCategory />
           </PrivateRoute>
         }
       />
