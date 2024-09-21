@@ -1,16 +1,13 @@
 import axios from 'axios'
 import { useMutation, useQuery } from 'react-query'
-// import { getUserJWT } from '../../../../../auth/utils'
-// import { REST_API_4, REST_SPAM_URL } from '../../../../../constants'
+import { API_CHAIRCATEGORY } from '../../../../components/constantsAPI'
 
-export const useGetListProject = (id, pages) => {
+export const useGetALLChairCategory = () => {
   const request = async () => {
-    const time = Date.now()
-    const fields = `sort=createdAt:DESC&pagination[page]=${pages}&populate[1]=upload_files&populate[2]=feature_image&pagination[pageSize]=15&filters[user_profile][user_id][$eq]=${id}&time=${time}`
-    const res = await axios.get(`projects?${fields}`)
+    const res = await axios.get(`${API_CHAIRCATEGORY}`)
     return res.data
   }
-  const query = useQuery(["listProject", pages], request, { refetchOnWindowFocus: false })
+  const query = useQuery(["listChairCategory"], request, { refetchOnWindowFocus: false })
   return query
 }
 
