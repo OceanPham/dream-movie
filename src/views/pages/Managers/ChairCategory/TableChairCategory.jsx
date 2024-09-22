@@ -119,8 +119,7 @@ const TableChairCategory = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListChairCategory?.length > 0 ? dataListChairCategory.map((item, index) => {
-
+                {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).map((item, index) => {
                   return (
                     <tr>
                       <td className='ps-3'>
