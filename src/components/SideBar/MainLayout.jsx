@@ -137,12 +137,13 @@ const MainLayout = () => {
     const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
     return (
         <Layout style={{ minHeight: '100vh' }} >
-            <Sider style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+
+            <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className='d-flex ps-3 align-items-center main_sideBar'>
                     <img src={logo} alt='logo' width={50} className='main_logo' />
                     <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
                 </div>
-                <Menu theme="light" defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
+                <Menu theme="light" className='sider_custom' defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
             </Sider>
 
             <Layout className='main_layout'>

@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap'
 import FormChairCategory from './FormChairCategory'
 
-const FilterChairCategory = () => {
+const FilterChairCategory = (listNameUsed) => {
   const [canvasPlacement, setCanvasPlacement] = useState('start')
   const [canvasOpen, setCanvasOpen] = useState(false)
 
@@ -47,7 +47,7 @@ const FilterChairCategory = () => {
                 'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
               })}
             >
-              <FormChairCategory parentCallback={callbackCanvasOpen} />
+              <FormChairCategory parentCallback={callbackCanvasOpen} listNameUsed={listNameUsed} />
             </OffcanvasBody>
           </Offcanvas>
         </div>
