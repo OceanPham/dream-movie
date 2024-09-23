@@ -12,6 +12,7 @@ import Logout from "../Auth/Logout";
 import SignUp from "../Auth/SignUp";
 import ExportTicket from "../views/pages/Dashboard/ExportTicket";
 import ChairCategory from "../views/pages/Managers/ChairCategory";
+import Producer from "../views/pages/Managers/Producer";
 
 const AppRouter = () => {
   return (
@@ -57,19 +58,39 @@ const AppRouter = () => {
       <Route
         path="/manager/chairCategory"
         element={
-          // <PrivateRoute>
-          <ChairCategory />
-          // </PrivateRoute>
+          <PrivateRoute>
+            <ChairCategory />
+          </PrivateRoute>
         }
       />
       <Route
         path="/manager/chairCategory/:alias"
         element={
-          // <PrivateRoute>
-          <ChairCategory />
-          // </PrivateRoute>
+          <PrivateRoute>
+            <ChairCategory />
+          </PrivateRoute>
         }
       />
+
+
+      <Route
+        path="/manager/producer"
+        element={
+          <PrivateRoute>
+            <Producer />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/producer/:alias"
+        element={
+          <PrivateRoute>
+            <Producer />
+          </PrivateRoute>
+        }
+      />
+
+
       <Route
         path="/manager/movie"
         element={
