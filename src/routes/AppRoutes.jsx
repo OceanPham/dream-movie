@@ -13,6 +13,7 @@ import SignUp from "../Auth/SignUp";
 import ExportTicket from "../views/pages/Dashboard/ExportTicket";
 import ChairCategory from "../views/pages/Managers/ChairCategory";
 import Producer from "../views/pages/Managers/Producer";
+import Showtime from "../views/pages/Managers/Showtime";
 
 const AppRouter = () => {
   return (
@@ -48,10 +49,10 @@ const AppRouter = () => {
         }
       />
       <Route
-        path="/manager/employee"
+        path="/manager/showtime"
         element={
           <PrivateRoute>
-            <ChairCategory />
+            <Showtime />
           </PrivateRoute>
         }
       />
@@ -71,7 +72,6 @@ const AppRouter = () => {
           </PrivateRoute>
         }
       />
-
 
       <Route
         path="/manager/producer"

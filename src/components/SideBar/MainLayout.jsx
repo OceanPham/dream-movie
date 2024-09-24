@@ -71,7 +71,7 @@ const MainLayout = () => {
                 break;
             case 'id_schedule':
                 setTitleCurrentPage('Quản Lý > Lịch Chiếu')
-                navigate('/manager/schedule-movie');
+                navigate('/manager/showtime');
                 break;
             case 'id_roomMovie':
                 setTitleCurrentPage('Quản Lý > Phòng Chiếu')
