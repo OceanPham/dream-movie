@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { API_CHAIRCATEGORY } from '../../../../components/constantsAPI'
+import { API_CHAIRCATEGORY, API_CINEMA, API_ROOM } from '../../../../components/constantsAPI'
 
 export const useGetALLChairCategory = () => {
   const request = async () => {
@@ -8,6 +8,24 @@ export const useGetALLChairCategory = () => {
     return res.data
   }
   const query = useQuery(["chairCategories"], request, { refetchOnWindowFocus: false })
+  return query
+}
+
+export const useGetALLCinema = () => {
+  const request = async () => {
+    const res = await axios.get(`${API_CINEMA}`)
+    return res.data
+  }
+  const query = useQuery(["cinemas"], request, { refetchOnWindowFocus: false })
+  return query
+}
+
+export const useGetALLRoom = () => {
+  const request = async () => {
+    const res = await axios.get(`${API_ROOM}`)
+    return res.data
+  }
+  const query = useQuery(["rooms"], request, { refetchOnWindowFocus: false })
   return query
 }
 

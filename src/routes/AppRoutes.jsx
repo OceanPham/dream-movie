@@ -56,6 +56,15 @@ const AppRouter = () => {
           </PrivateRoute>
         }
       />
+
+      <Route
+        path="/manager/showtime/:alias"
+        element={
+          <PrivateRoute>
+            <Showtime />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/manager/chairCategory"
         element={
