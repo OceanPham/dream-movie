@@ -11,7 +11,9 @@ import Login from "../Auth/Login";
 import Logout from "../Auth/Logout";
 import SignUp from "../Auth/SignUp";
 import ExportTicket from "../views/pages/Dashboard/ExportTicket";
-import Employee from "../views/pages/Managers/employees";
+import ChairCategory from "../views/pages/Managers/ChairCategory";
+import Producer from "../views/pages/Managers/Producer";
+import Showtime from "../views/pages/Managers/Showtime";
 
 const AppRouter = () => {
   return (
@@ -47,18 +49,53 @@ const AppRouter = () => {
         }
       />
       <Route
-        path="/manager/employee"
+        path="/manager/showtime"
         element={
           <PrivateRoute>
-            <Employee />
+            <Showtime />
           </PrivateRoute>
         }
       />
       <Route
+        path="/manager/chairCategory"
+        element={
+          <PrivateRoute>
+            <ChairCategory />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/chairCategory/:alias"
+        element={
+          <PrivateRoute>
+            <ChairCategory />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/manager/producer"
+        element={
+          <PrivateRoute>
+            <Producer />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/producer/:alias"
+        element={
+          <PrivateRoute>
+            <Producer />
+          </PrivateRoute>
+        }
+      />
+
+
+      <Route
         path="/manager/movie"
         element={
           <PrivateRoute>
-            <Employee />
+            <ChairCategory />
           </PrivateRoute>
         }
       />
@@ -66,7 +103,7 @@ const AppRouter = () => {
         path="/manager/food"
         element={
           <PrivateRoute>
-            <Employee />
+            <ChairCategory />
           </PrivateRoute>
         }
       />

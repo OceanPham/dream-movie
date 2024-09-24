@@ -25,21 +25,19 @@ const items = [
         getItem('Tổng Quát', 'id_overView', <FaRegCircle />),
         getItem('Xuất Vé', 'id_sellTicket', <FaRegCircle />),
     ]),
-    // getItem('Quản Lý', '4', <DesktopOutlined />),
     getItem('Quản Lý', 'subManager', <SolutionOutlined className='custom_icon_sidebar' />, [
         getItem('Nhân Viên', 'id_employee', <FaRegCircle />),
         getItem('Phim ', 'id_movie', <FaRegCircle />),
         getItem('Lịch Chiếu ', 'id_schedule', <FaRegCircle />),
         getItem('Phòng Chiếu ', 'id_roomMovie', <FaRegCircle />),
         getItem('Mã Giảm giá ', 'id_voucher', <FaRegCircle />),
-        getItem('Loại Thực Phẩm ', 'id_foodCatagory', <FaRegCircle />),
+        getItem('Loại Thực Phẩm ', 'id_foodCategory', <FaRegCircle />),
         getItem('Thực Phẩm ', 'id_food', <FaRegCircle />),
-        getItem('Loại Phim', 'id_movieCatagory', <FaRegCircle />),
-        getItem('Loại Ghế', 'id_chairCatagory', <FaRegCircle />),
+        getItem('Loại Phim', 'id_movieCategory', <FaRegCircle />),
+        getItem('Loại Ghế', 'id_chairCategory', <FaRegCircle />),
         getItem('Tin Tức', 'id_news', <FaRegCircle />),
         getItem('Nhà Cung Cấp', 'id_producer', <FaRegCircle />),
         getItem('Quy Định', 'id_policy', <FaRegCircle />),
-        // getItem('Loại Phim', 'id_movieCatagory', <FaRegCircle />),
     ]),
     getItem('Hồ Sơ', 'subBriefcase', <UserOutlined className='custom_icon_sidebar' />, [
         getItem('Thông tin cá nhân', 'id_userinfo', <FaRegCircle />),
@@ -73,7 +71,7 @@ const MainLayout = () => {
                 break;
             case 'id_schedule':
                 setTitleCurrentPage('Quản Lý > Lịch Chiếu')
-                navigate('/manager/schedule-movie');
+                navigate('/manager/showtime');
                 break;
             case 'id_roomMovie':
                 setTitleCurrentPage('Quản Lý > Phòng Chiếu')
@@ -83,21 +81,21 @@ const MainLayout = () => {
                 setTitleCurrentPage('Quản Lý > Mã Giảm giá')
                 navigate('/manager/voucher');
                 break;
-            case 'id_foodCatagory':
+            case 'id_foodCategory':
                 setTitleCurrentPage('Quản Lý > Loại Thực Phẩm')
-                navigate('/manager/foodCatagory');
+                navigate('/manager/foodCategory');
                 break;
             case 'id_food':
                 setTitleCurrentPage('Quản Lý > Thực Phẩm')
                 navigate('/manager/food');
                 break;
-            case 'id_movieCatagory':
+            case 'id_movieCategory':
                 setTitleCurrentPage('Quản Lý > Loại Phim')
-                navigate('/manager/movieCatagory');
+                navigate('/manager/movieCategory');
                 break;
-            case 'id_chairCatagory':
+            case 'id_chairCategory':
                 setTitleCurrentPage('Quản Lý > Loại Ghế')
-                navigate('/manager/chairCatagory');
+                navigate('/manager/chairCategory');
                 break;
             case 'id_news':
                 setTitleCurrentPage('Quản Lý > Tin Tức')
@@ -139,13 +137,13 @@ const MainLayout = () => {
     const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
     return (
         <Layout style={{ minHeight: '100vh' }} >
-            <Sider style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
 
+            <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className='d-flex ps-3 align-items-center main_sideBar'>
                     <img src={logo} alt='logo' width={50} className='main_logo' />
                     <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
                 </div>
-                <Menu theme="light" defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
+                <Menu theme="light" className='sider_custom' defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
             </Sider>
 
             <Layout className='main_layout'>
@@ -171,33 +169,14 @@ const MainLayout = () => {
                     </div>
                 </Header>
 
-                <Content
-                    style={{
-                        margin: '0 16px',
-                    }}
-                >
+                <Content style={{ margin: '0 16px', }} >
                     <Breadcrumb className='my-2' >
                         <Breadcrumb.Item>{titleCurrentPage}</Breadcrumb.Item>
-                        {/* <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
                     </Breadcrumb>
-                    <div
-                        style={{
-                            padding: 24,
-                            minHeight: 360,
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
+                    <>
                         <AppRouter />
-                    </div>
+                    </>
                 </Content>
-                {/* <Footer
-                    style={{
-                        textAlign: 'center',
-                    }}
-                >
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
-                </Footer> */}
             </Layout>
         </Layout>
     );
