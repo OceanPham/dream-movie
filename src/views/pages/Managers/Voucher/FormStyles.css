@@ -1,0 +1,26 @@
+.custom-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .custom-input {
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .custom-datepicker {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .error-text {
+    color: red;
+    font-size: 12px;
+  }
+  
+  .required {
+    color: red;
+  }
+  .Sideform{
+    height: 80vh;
+  }

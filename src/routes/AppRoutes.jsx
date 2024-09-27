@@ -14,7 +14,7 @@ import ExportTicket from "../views/pages/Dashboard/ExportTicket";
 import ChairCategory from "../views/pages/Managers/ChairCategory";
 import Producer from "../views/pages/Managers/Producer";
 import Showtime from "../views/pages/Managers/Showtime";
-
+import Voucher from "../views/pages/Managers/Voucher";
 const AppRouter = () => {
   return (
     // <BrowserRouter>
@@ -69,6 +69,22 @@ const AppRouter = () => {
         element={
           <PrivateRoute>
             <ChairCategory />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/voucher"
+        element={
+          <PrivateRoute>
+            <Voucher />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/voucher/:alias"
+        element={
+          <PrivateRoute>
+            <Voucher />
           </PrivateRoute>
         }
       />
