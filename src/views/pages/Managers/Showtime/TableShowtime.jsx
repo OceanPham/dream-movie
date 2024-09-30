@@ -8,7 +8,7 @@ import LoadingRow from '../../../components/Tables/LoadingRow'
 import Pagination from '../../../components/paginations'
 import FilterShowtime from './FilterShowtime'
 import classNames from 'classnames'
-import { useDeleteChairCategory, useGetALLChairCategory } from './hook'
+import { useDeleteChairCategory, useGetALLChairCategory, useGetALLShowTime } from './hook'
 import { Link, useNavigate } from 'react-router-dom'
 import FormChairCategory from './FormShowtime'
 import Swal from 'sweetalert2'
@@ -17,7 +17,7 @@ import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
 
-const columnHeaders = ["STT", "Tên NCC", "Trạng Thái", "Quốc Gia", "Số Điện Thoại", "Cập Nhật Lần Cuối", "Hành Động"]
+const columnHeaders = ["STT", "Phim Chiếu", "Thời Gian Chiếu", "Thời Lượng", "Rạp Chiếu", "Phòng Chiếu", "Trạng Thái", "Hành Động"]
 
 const TableShowtime = () => {
   const role = useRole()
@@ -37,11 +37,11 @@ const TableShowtime = () => {
     setCanvasOpen(!canvasOpen)
   }
 
-  const { status, data: dataListChairCategory } = useGetALLChairCategory()
+  const { status, data: dataListShowTime } = useGetALLShowTime()
   const { status: sttDelete, mutate: deleteChairCategory } = useDeleteChairCategory()
 
 
-  const listNameUsed = dataListChairCategory && dataListChairCategory?.length > 0 && dataListChairCategory.map(((item) => item?.name?.toLowerCase()?.trim()))
+  const listShowTime = dataListShowTime && dataListShowTime?.length > 0 && dataListShowTime.map(((item) => item?.name?.toLowerCase()?.trim()))
   const MySwal = withReactContent(Swal)
 
   const handleConfirmDelete = (id) => {
@@ -107,7 +107,7 @@ const TableShowtime = () => {
   return (
     <>
       <Card className='wrap-container border-none'>
-        <FilterShowtime listNameUsed={listNameUsed} />
+        <FilterShowtime listShowTime={dataListShowTime} />
         <Table responsive>
           {status === 'loading' ? (
             <React.Fragment>
@@ -119,7 +119,7 @@ const TableShowtime = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).map((item, index) => {
+                {dataListShowTime?.length > 0 ? dataListShowTime.sort((a, b) => b.id - a.id).map((item, index) => {
                   return (
                     <tr>
                       <td className='ps-3'>
@@ -127,23 +127,28 @@ const TableShowtime = () => {
                       </td>
 
                       <td className='string-name'>
-                        {item?.name ? item?.name : <> <NoData /> </>}
+                        {item?.film?.name ? item?.film?.name : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.name ? item?.name : <> <NoData /> </>}
+                        <Clock size={17} /> {timeReFormat(item?.start_time) ? timeReFormat(item?.start_time) : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.price ? item?.price + '.VND' : <> <NoData /> </>}
+                        {item?.film?.thoiluong ? item?.film?.thoiluong : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.seatCount ? item?.seatCount : <> <NoData /> </>}
+                        {item?.cinema?.name ? item?.cinema?.name : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
+                        {item?.room?.name ? item?.room?.name : <> <NoData /> </>}
+                      </td>
+
+                      <td className='string-name'>
+                        {item?.status ? item?.status : <> <NoData /> </>}
+
                       </td>
                       <td className='fw-bold string-name d-flex justify-content-center'>
                         <div className='column-action d-flex align-items-center'>
