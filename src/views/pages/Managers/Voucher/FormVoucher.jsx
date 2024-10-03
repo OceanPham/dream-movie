@@ -7,32 +7,41 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 
-// Định nghĩa schema với Yup
+// Định nghĩa schema với Yup để kiểm tra các trường dữ liệu
 const schema = Yup.object().shape({
-  voucher: Yup.string()
+  employeeName: Yup.string()
     .required('Tên đăng nhập nhân viên không được để trống.')
     .matches(/^[^\d][A-Za-z0-9]*$/, 'Tên đăng nhập nhân viên phải bắt đầu bằng chữ và bao gồm chữ và số.')
     .max(50, 'Tên đăng nhập nhân viên không được dài quá 50 ký tự.'),
+
+  voucherCode: Yup.string()
+    .required('Vui lòng nhập tên của mã giảm giá.') // Không nhập dữ liệu
+    .min(5, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') // Dữ liệu ít hơn 5 ký tự
+    .max(14, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.'), // Dữ liệu nhiều hơn 14 ký tự
+  
   discountRate: Yup.number()
     .required('Vui lòng nhập tỉ lệ chiết khấu.')
     .min(5, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.')
     .max(50, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.')
     .typeError('Tỉ lệ chiết khấu phải là một số hợp lệ.'),
+  
   usageLimit: Yup.number()
     .required('Vui lòng nhập hạn mức.')
     .min(5000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.')
     .max(15000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.')
     .typeError('Hạn mức phải là một số hợp lệ.'),
+
   status: Yup.string()
     .required('Vui lòng chọn tình trạng mã giảm giá.'),
+
   createdAt: Yup.date()
     .required('Vui lòng chọn ngày tạo.')
     .min(moment().startOf('day'), 'Hãy chọn ngày tạo hợp lệ.'),
+
   expiryDate: Yup.date()
     .required('Vui lòng chọn hạn dùng.')
     .test('is-after-createdAt', 'Hạn dùng phải sau ngày tạo ít nhất 1 giờ.', function (value) {
       const createdAt = this.resolve(Yup.ref('createdAt'));
-      // Kiểm tra nếu hạn dùng trùng ngày tạo thì phải cách ít nhất 1 giờ
       return moment(value).isAfter(moment(createdAt).add(1, 'hour'));
     }),
 });
@@ -48,7 +57,8 @@ const FormVoucher = ({ parentCallback }) => {
 
   const onSubmit = (data) => {
     const db_submit = {
-      name: data?.voucher?.trim() || '',
+      employeeName: data?.employeeName?.trim() || '',
+      voucherCode: data?.voucherCode?.trim() || '',
       discountRate: data?.discountRate || '',
       usageLimit: data?.usageLimit || '',
       status: data?.status || '',
@@ -66,22 +76,37 @@ const FormVoucher = ({ parentCallback }) => {
         <form className='mt-2' onSubmit={handleSubmit(onSubmit)}>
           <Row>
             {/* Tên đăng nhập nhân viên */}
-            <Col md='12' className='mb-5'>
+            <Col md='12' className='mb-4'>
               <Label className='form-label'>
                 Tên đăng nhập nhân viên <span>*</span>
               </Label>
               <Controller
-                name="voucher"
+                name="employeeName"
                 control={control}
                 render={({ field }) => (
                   <Input {...field} placeholder="Nhập vào tên đăng nhập nhân viên" />
                 )}
               />
-              {errors.voucher && <span className='errors'>{errors.voucher.message}</span>}
+              {errors.employeeName && <span className='errors'>{errors.employeeName.message}</span>}
+            </Col>
+
+            {/* Mã giảm giá */}
+            <Col md='12' className='mb-4'>
+              <Label className='form-label'>
+                Mã giảm giá <span>*</span>
+              </Label>
+              <Controller
+                name="voucherCode"
+                control={control}
+                render={({ field }) => (
+                  <Input {...field} placeholder="Nhập vào mã giảm giá" />
+                )}
+              />
+              {errors.voucherCode && <span className='errors'>{errors.voucherCode.message}</span>}
             </Col>
 
             {/* Tỉ lệ chiết khấu */}
-            <Col md='12' className='mb-5'>
+            <Col md='12' className='mb-4'>
               <Label className='form-label'>
                 Tỉ lệ chiết khấu (%) <span>*</span>
               </Label>
@@ -96,7 +121,7 @@ const FormVoucher = ({ parentCallback }) => {
             </Col>
 
             {/* Hạn mức */}
-            <Col md='12' className='mb-5'>
+            <Col md='12' className='mb-4'>
               <Label className='form-label'>
                 Hạn mức (VNĐ)<span>*</span>
               </Label>
@@ -111,7 +136,7 @@ const FormVoucher = ({ parentCallback }) => {
             </Col>
 
             {/* Tình trạng mã giảm giá */}
-            <Col md='12' className='mb-5'>
+            <Col md='12' className='mb-4'>
               <Label className='form-label'>
                 Tình Trạng <span>*</span>
               </Label>
@@ -130,7 +155,7 @@ const FormVoucher = ({ parentCallback }) => {
             </Col>
 
             {/* Ngày tạo */}
-            <Col md='6' className='mb-5'>
+            <Col md='6' className='mb-4'>
               <Label className='form-label'>Ngày tạo <span>*</span></Label>
               <Controller
                 name="createdAt"
@@ -147,7 +172,7 @@ const FormVoucher = ({ parentCallback }) => {
             </Col>
 
             {/* Hạn dùng */}
-            <Col md='6' className='mb-2'>
+            <Col md='6' className='mb-4'>
               <Label className='form-label'>Hạn dùng <span>*</span></Label>
               <Controller
                 name="expiryDate"
