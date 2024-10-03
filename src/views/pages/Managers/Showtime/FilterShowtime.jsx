@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap'
 import FormShowtime from './FormShowtime'
 
-const Showtime = (listNameUsed) => {
+const Showtime = (listShowTime) => {
   const [canvasPlacement, setCanvasPlacement] = useState('start')
   const [canvasOpen, setCanvasOpen] = useState(false)
 
@@ -47,7 +47,7 @@ const Showtime = (listNameUsed) => {
                 'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
               })}
             >
-              <FormShowtime parentCallback={callbackCanvasOpen} listNameUsed={listNameUsed} />
+              <FormShowtime parentCallback={callbackCanvasOpen} listShowTime={listShowTime} />
             </OffcanvasBody>
           </Offcanvas>
         </div>

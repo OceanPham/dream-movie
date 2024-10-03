@@ -6,60 +6,206 @@ import { useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, Col, Input, Label, Row, Spinner } from 'reactstrap'
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAddChairCategory } from './hook'
+import { useAddChairCategory, useAddShowTime, useGetALLCinema, useGetALLLanguage, useGetALLMovie, useGetALLRoom, useGetALLScreeningFormat, useGetALLScreeningType, useGetALLVoucher } from './hook'
 import useRole from '../../../../Auth/useRole'
-import Select from 'react-select';
-import countryList from 'react-select-country-list'; // Import the country list
+import { DatePicker } from 'antd'
 
 
 const schema = Yup.object().shape({
-  name: Yup.string()
-    .required('Tên loại ghế không được để trống.')
-    .min(3, 'Tên loại ghế phải có ít nhất 3 ký tự.')
-    .max(50, 'Tên loại ghế không được dài quá 50 ký tự.')
-    .matches(/^[^\d]/, 'Tên loại ghế không được bắt đầu bằng số.')
-    .matches(/^[A-Za-zÀ-ỹà-ỹ0-9\s]+$/, 'Tên loại ghế không được phép chứa kí tự đặc biệt.')
+  movie: Yup.string()
+    .required('Vui lòng chọn một bộ phim.'),
+  cinema: Yup.string()
+    .required('Vui lòng chọn rạp chiếu.'),
+  room: Yup.string()
+    .required('Vui lòng chọn phòng chiếu.'),
+  format: Yup.string()
+    .required('Vui lòng chọn định dạng chiếu.'),
+  language: Yup.string()
+    .required('Vui lòng chọn ngôn ngữ cho phim.'),
+  type: Yup.string()
+    .required('Vui lòng chọn loại suất chiếu.'),
+  time_start: Yup.string()
+    .required('Vui lòng chọn thời gian bắt đầu chiếu.')
+    .test('max-1-month', 'Thời gian lịch chiếu xa hơn thời gian hiện tại không quá 1 tháng!', function (value) {
+      if (!value) return false;
+      const selectedDate = new Date(value)
+      const currentDate = new Date()
+      const maxAllowedDate = new Date()
+      const currentMonth = currentDate.getMonth()
+      maxAllowedDate.setMonth(currentMonth + 1)
+      return selectedDate <= maxAllowedDate;
+    })
+    .test('before-current', 'Thời gian lịch chiếu phải sau thời gian hiện tại!', function (value) {
+      if (!value) return false;
+      const selectedDate = new Date(value)
+      const currentDate = new Date()
+      return selectedDate > currentDate;
+    })
   ,
-
-  description: Yup.string()
-    .max(300, 'Mô tả loại ghế không được vượt quá 300 ký tự.'),
-
-  status: Yup.object()
-    .required('Vui lòng chọn Trạng thái của nhà cung cấp.'),
-
-  country: Yup.object()
-    .required('Vui lòng chọn quốc gia của nhà cung cấp.'),
-
 });
-const FormShowtime = ({ parentCallback, listNameUsed }) => {
+const FormShowtime = ({ parentCallback, listShowTime }) => {
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { control, handleSubmit, watch, formState: { errors } } = useForm({ resolver: yupResolver(schema), })
-  const { status: sttEdit, mutate: addChairCategory } = useAddChairCategory()
+  const { status: sttEdit, mutate: addShowTime } = useAddShowTime();
   const role = useRole()
 
-  const options = countryList().getData(); // Get the list of countries
-  const [country, setCountry] = useState(null);
-  const [invalidName, setInvalidName] = useState('')
-  const MAX_LENGTH = 300
-  const description = watch('description')
-  const [wordCountDescription, setWordCountDescription] = useState(0);
-  const [wordOverDescription, setWordOverDescription] = useState(false);
+  const cinemaSelected = watch('cinema')
 
-  const optionStatus = {
-    active: { value: 'active', label: 'Hoạt động' },
-    inactive: { value: 'inactive', label: 'Tạm ngừng' },
-    stop: { value: 'stop', label: 'Ngừng hợp tác' }
-  };
+  const [listCinema, setListCinema] = useState();
+  const [listRoom, setListRoom] = useState();
+  const [listMovie, setListMovie] = useState();
+  const [listScreeningFormat, setListScreeningFormat] = useState();
+  const [listScreeningType, setListScreeningType] = useState();
+  const [listLanguage, setListLanguage] = useState();
+  const [listVoucher, setListVoucher] = useState();
+
+  const { status, data: dataListCinema } = useGetALLCinema()
+  const { statusRoom, data: dataListRoom } = useGetALLRoom()
+  const { statusMovie, data: dataListMovie } = useGetALLMovie()
+  const { statusScreeningFormat, data: dataListScreeningFormat } = useGetALLScreeningFormat()
+  const { statusScreeningType, data: dataListScreeningType } = useGetALLScreeningType()
+  const { statusLanguage, data: dataListLanguage } = useGetALLLanguage()
+  const { statusVoucher, data: dataListVoucher } = useGetALLVoucher()
+
+  const convertDurationToMs = (duration) => {
+    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    const totalMilliseconds = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000);
+    return totalMilliseconds;
+  }
+
+  const checkValideShowTime = (start_Time, end_Time) => {
+    const startTime = new Date(start_Time).getTime();
+    console.log('startTime; ', startTime);
+
+    const endTime = new Date(end_Time).getTime();
+    console.log('endTime; ', endTime);
+
+    console.log('listShowTime: ', listShowTime);
+
+    for (const item of listShowTime?.listShowTime) {
+      console.log('item: ', item);
+
+      const startTimeExisting = new Date(item?.start_time).getTime();
+      console.log('startTimeExisting; ', startTimeExisting);
+
+      const durationItem = convertDurationToMs(item?.film?.thoiluong || "00:00:00")
+      console.log('durationItem; ', durationItem);
+
+      const endTimeExisting = startTimeExisting + durationItem
+      console.log('endTimeExisting; ', endTimeExisting);
+
+
+      if (startTime <= startTimeExisting && startTimeExisting <= endTime) return false
+      if (startTime <= startTimeExisting && (startTimeExisting <= endTime || endTimeExisting <= endTime)) return false
+      if (startTimeExisting <= startTime && (startTime <= endTimeExisting || endTime <= endTimeExisting)) return false
+      if (startTimeExisting <= startTime && startTime <= endTimeExisting) return false
+    }
+    return true;
+
+    // listShowTime && listShowTime?.listShowTime?.length > 0 && listShowTime?.listShowTime?.map((item) => {
+    //   const startTimeExisting = new Date(item?.start_time).getTime();
+    //   const durationItem = convertDurationToMs(item?.film?.thoiluong || "00:00:00")
+    //   const endTimeExisting = new Date(startTimeExisting + durationItem)
+
+    //   if (startTime <= startTimeExisting && startTimeExisting <= endTime) return false
+    //   if (startTime <= startTimeExisting && (startTimeExisting <= endTime || endTimeExisting <= endTime)) return false
+    //   if (startTimeExisting <= startTime && (startTime <= endTimeExisting || endTime <= endTimeExisting)) return false
+    //   if (startTimeExisting <= startTime && startTime <= endTimeExisting) return false
+
+    //   return true;
+    // })
+
+  }
 
 
   useEffect(() => {
-    setWordCountDescription(description ? description.length : 0)
-    if (description ? (description.length <= MAX_LENGTH) : 0) setWordOverDescription(true)
-    if (description ? (description.length > MAX_LENGTH) : 0) setWordOverDescription(false)
+    const fetchCinema = dataListCinema && dataListCinema?.length > 0 && dataListCinema?.map((item, index) => {
+      return {
+        id: item.id,
+        name: item?.name
+      }
+    })
 
-  }, [description])
+    const fetchRoom = cinemaSelected && dataListRoom && dataListRoom?.length > 0 && dataListRoom?.filter((item) => item?.cinema?.id === cinemaSelected)
+      .map(item => ({
+        id: item.id,
+        name: item?.name
+      }))
+
+    const fetchMovie = dataListMovie && dataListMovie?.length > 0 && dataListMovie?.filter((item) => item?.trangthai == 1)
+      .map((item) => {
+        return {
+          id: item.id,
+          name: item?.name,
+          thoiluong: item?.thoiluong
+        }
+      })
+
+    const fetchScreeningFormat = dataListScreeningFormat && dataListScreeningFormat?.length > 0 && dataListScreeningFormat?.map((item, index) => {
+      return {
+        id: item.id,
+        name: item?.name,
+        status: item?.status
+      }
+    })
+
+    const fetchScreeningType = dataListScreeningType && dataListScreeningType?.length > 0 && dataListScreeningType?.map((item, index) => {
+      return {
+        id: item.id,
+        name: item?.name,
+        status: item?.status
+      }
+    })
+
+    const fetchLanguage = dataListLanguage && dataListLanguage?.length > 0 && dataListLanguage?.map((item, index) => {
+      return {
+        id: item.id,
+        name: item?.name,
+        status: item?.status
+      }
+    })
+
+    const fetchVoucher = dataListVoucher && dataListVoucher?.length > 0 && dataListVoucher?.map((item, index) => {
+      return {
+        id: item.id,
+        name: item?.name,
+        tinh_trang: item?.tinh_trang,
+        han_dung: item?.han_dung,
+      }
+    })
+
+    setListCinema(fetchCinema)
+    setListRoom(fetchRoom)
+    setListMovie(fetchMovie)
+    setListScreeningFormat(fetchScreeningFormat)
+    setListLanguage(fetchLanguage)
+    setListScreeningType(fetchScreeningType)
+    setListVoucher(fetchVoucher)
+  }, [status, statusRoom, statusMovie, statusScreeningFormat, statusLanguage, statusScreeningType, statusVoucher])
+
+
+  useEffect(() => {
+    const fetchRoom = cinemaSelected && dataListRoom && dataListRoom?.length > 0 && dataListRoom?.filter((item) => item?.cinema?.id == cinemaSelected)
+      .map(item => ({
+        id: item.id,
+        name: item?.name
+      }))
+
+    setListRoom(fetchRoom)
+
+  }, [cinemaSelected])
+
+  const optionStatus = {
+    active: { value: 'active', label: 'Hoạt động' },
+    // showed: { value: 'showed', label: 'Đã chiếu' },
+    inactive: { value: 'inactive', label: 'Tạm hoãn' },
+    stop: { value: 'stop', label: 'Đã hủy' }
+  };
+  const onOk = (value) => {
+    console.log('onOk: ', value);
+  };
 
   const onSubmit = (data) => {
 
@@ -67,29 +213,65 @@ const FormShowtime = ({ parentCallback, listNameUsed }) => {
       toast.error('Bạn không được phân quyền thêm loại ghế!')
       return
     }
-    const db_submit = {
-      name: data?.chairCategory?.trim() || '',
-      price: data?.ticketPrice || '',
-      seatCount: data?.maxSeats || '',
-      description: data?.description?.trim() || '',
-    }
-    const errName = listNameUsed?.listNameUsed?.includes(db_submit.name.toLowerCase());
-    if (errName) {
-      setInvalidName('Tên loại ghế đã tồn tại, vui lòng chọn tên khác.')
-      return;
-    }
-    setInvalidName('')
+    // console.log('data: ', data);
+    const convertMovie = JSON.parse(data?.movie);
+    // console.log('convertMovie: ', convertMovie);
 
-    addChairCategory(db_submit, {
+    const start_time = data?.time_start ? new Date(data.time_start)?.toISOString() : '';
+    // console.log('start_time: ', start_time);
+    const duration = convertMovie?.thoiluong || "00:00:00";
+    // console.log('duration: ', duration);
+
+    const durationInMs = convertDurationToMs(duration);
+
+    const end_time = new Date(new Date(start_time).getTime() + durationInMs);
+    // console.log('end_time: ', end_time.toISOString());
+
+    const checkSchedule = checkValideShowTime(start_time, end_time)
+    // console.log('checkSchedule: ', checkSchedule);
+
+    if (!checkSchedule) {
+      toast.error('Rạp đã có lịch chiếu vào thời gian này, vui lòng chọn thời gian khác.')
+      return
+    }
+
+    const db_submit = {
+      film: {
+        id: parseInt(convertMovie?.id) || 0
+      },
+      start_time: data?.time_start ? new Date(data.time_start)?.toISOString() : '',
+      cinema: {
+        id: parseInt(data?.cinema) || 0
+      },
+      room: {
+        id: parseInt(data?.room) || 0
+      },
+      screeningFormat: {
+        id: parseInt(data?.format) || 0
+      },
+      language: {
+        id: parseInt(data?.language) || 0
+      },
+      screeningType: {
+        id: parseInt(data?.type) || 0
+      },
+      status: data?.statusShowTime == 'stop' ? 'Đã hủy' : data?.statusShowTime == 'inactive' ? 'Tạm hoãn' : 'Hoạt Động',
+      voucher: {
+        id: parseInt(data?.voucher) || 0
+      }
+    }
+
+
+    addShowTime(db_submit, {
       onSuccess: () => {
-        toast.success('Thêm loại ghế thành công!')
+        toast.success('Thêm lịch chiếu thành công!')
         setTimeout(() => {
           navigate("/manager/showtime")
           parentCallback()
-          queryClient.invalidateQueries('chairCategories'); // Invalidate the chair category query to refetch the updated data
+          queryClient.invalidateQueries('showtime')
         }, 3000);
       },
-      onError: () => toast.error('Thêm loại ghế không thành công!'),
+      onError: () => toast.error('Thêm lịch chiếu không thành công!'),
     })
   }
 
@@ -103,243 +285,260 @@ const FormShowtime = ({ parentCallback, listNameUsed }) => {
         >
           <Row>
 
-            {/* name */}
-            <Col md='12' className='mb-2'>
-              <Label className='form-label'>
-                Phim chiếu <span>*</span>
-              </Label>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => <Input
-                  {...field}
-                  placeholder="Nhập vào tên nhà cung cấp"
-                />}
-              />
-              {errors.name && (
-                <span className='errors'>{errors.name.message}</span>
-              )}
-              {invalidName && <span className='errors'>{invalidName}</span>}
-            </Col>
 
-            {/* status */}
-            <Col md='6' className='mb-2'>
-              <Label className='form-label'>
-                Thời gian bắt đầu <span>*</span>
-              </Label>
-              <Controller
-                name="status"
-                control={control}
-                render={({ field }) =>
-                  <Input
-                    type="select"
-                    {...field}
-                    className="form-select"
-                  >
-                    <option value="">Chọn trạng thái</option>
-                    {Object.values(optionStatus).map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
-                      </option>
-                    ))}
-                  </Input>
-                }
-              />
-              {errors.status && (
-                <span className='errors'>{errors.status.message}</span>
-              )}
-            </Col>
-
-            {/* status */}
-            <Col md='6' className='mb-2'>
+            {/* cinema */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
                 Rạp chiếu <span>*</span>
               </Label>
               <Controller
-                name="status"
+                name="cinema"
                 control={control}
                 render={({ field }) =>
                   <Input
                     type="select"
                     {...field}
-                    className="form-select"
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
-                    <option value="">Chọn trạng thái</option>
-                    {Object.values(optionStatus).map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
+                    <option value="">Chọn rạp chiếu</option>
+                    {listCinema && listCinema?.length > 0 && Object?.values(listCinema)?.map((cinema) => (
+                      <option key={cinema.id} value={cinema.id}>
+                        {cinema.name}
                       </option>
                     ))}
                   </Input>
                 }
               />
-              {errors.status && (
-                <span className='errors'>{errors.status.message}</span>
+              {errors.cinema && (
+                <span className='errors'>{errors.cinema.message}</span>
               )}
             </Col>
 
-            {/* status */}
-            <Col md='6' className='mb-2'>
+            {/* room */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
                 Phòng chiếu <span>*</span>
               </Label>
               <Controller
-                name="status"
+                name="room"
                 control={control}
                 render={({ field }) =>
                   <Input
                     type="select"
                     {...field}
-                    className="form-select"
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
-                    <option value="">Chọn trạng thái</option>
-                    {Object.values(optionStatus).map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
+                    <option value="">Chọn phòng chiếu</option>
+                    {listRoom && listRoom?.length > 0 && Object.values(listRoom).map((room) => (
+                      <option key={room?.id} value={room?.id}>
+                        {room?.name}
                       </option>
                     ))}
                   </Input>
                 }
               />
-              {errors.status && (
-                <span className='errors'>{errors.status.message}</span>
+              {errors.room && (
+                <span className='errors'>{errors.room.message}</span>
               )}
             </Col>
 
-            {/* status */}
-            <Col md='6' className='mb-2'>
+
+            {/* movie */}
+            <Col md='6' className='mb-3'>
+              <Label className='form-label'>
+                Phim chiếu <span>*</span>
+              </Label>
+              <Controller
+                name="movie"
+                control={control}
+                render={({ field }) =>
+                  <Input
+                    type="select"
+                    {...field}
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
+                  >
+                    <option value="">Chọn phim chiếu</option>
+                    {listMovie && listMovie?.length > 0 && Object?.values(listMovie)?.map((cinema) => (
+                      <option key={cinema?.id} value={JSON.stringify(cinema)}>
+                        {cinema?.name}
+                      </option>
+                    ))}
+                  </Input>
+                }
+              />
+              {errors.movie && (
+                <span className='errors'>{errors.movie.message}</span>
+              )}
+            </Col>
+
+            {/* time_start */}
+            <Col md='6' className='mb-3'>
+              <Label className='form-label'>
+                Thời gian bắt đầu <span>*</span>
+              </Label>
+              <Controller
+                name="time_start"
+                control={control}
+                render={({ field }) =>
+                  <DatePicker
+                    {...field}
+                    showTime
+                    className='w-100'
+                    style={{ maxHeight: '55%' }}
+                    onChange={(value, dateString) => {
+                      field.onChange(value);
+                    }}
+                    onOk={onOk}
+                  />
+                }
+              />
+              {errors.time_start && (
+                <span className='errors'>{errors.time_start.message}</span>
+              )}
+            </Col>
+
+            {/* format */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
                 Định dạng chiếu <span>*</span>
               </Label>
               <Controller
-                name="status"
+                name="format"
                 control={control}
                 render={({ field }) =>
                   <Input
                     type="select"
                     {...field}
-                    className="form-select"
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
-                    <option value="">Chọn trạng thái</option>
-                    {Object.values(optionStatus).map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
+                    <option value="">Chọn định dạng chiếu</option>
+                    {listScreeningFormat && listScreeningFormat?.length > 0 && Object?.values(listScreeningFormat)?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
                       </option>
                     ))}
                   </Input>
                 }
               />
-              {errors.status && (
-                <span className='errors'>{errors.status.message}</span>
+              {errors.format && (
+                <span className='errors'>{errors.format.message}</span>
               )}
             </Col>
 
-            {/* country */}
-            <Col md='6' className='mb-2'>
+            {/* language */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
-                Ngôn ngữ phim <span>*</span>
+                Ngôn ngữ của phim <span>*</span>
               </Label>
               <Controller
-                name="country"
+                name="language"
                 control={control}
                 render={({ field }) =>
-                  <Select
+                  <Input
                     {...field}
-                    options={options}
-                    value={options.find(option => option.value === field.value)}
-                    onChange={(selectedOption) => field.onChange(selectedOption.value)}
-                    placeholder="Chọn quốc gia"
-                    classNamePrefix="select"
-                  />
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
+                    type="select"
+                  >
+                    <option value="">Chọn ngôn ngữ của phim</option>
+                    {listLanguage && listLanguage?.length > 0 && Object?.values(listLanguage)?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </Input>
                 }
               />
-              {errors.country && (
-                <span className='errors'>{errors.country.message}</span>
+              {errors.language && (
+                <span className='errors'>{errors.language.message}</span>
               )}
             </Col>
 
-            {/* email */}
-            <Col md='12' className='mb-2'>
+            {/* type */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
                 Loại suất chiếu <span>*</span>
               </Label>
               <Controller
-                name="email"
+                name="type"
                 control={control}
-                render={({ field }) => <Input
-                  {...field}
-                  placeholder="Nhập vào tên địa chỉ email"
-                />}
+                render={({ field }) =>
+                  <Input
+                    type="select"
+                    {...field}
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
+                  >
+                    <option value="">Chọn loại suất chiếu</option>
+                    {listScreeningType && listScreeningType?.length > 0 && Object?.values(listScreeningType)?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </Input>
+                }
               />
-              {errors.email && (
-                <span className='errors'>{errors.email.message}</span>
+              {errors.type && (
+                <span className='errors'>{errors.type.message}</span>
               )}
-              {invalidName && <span className='errors'>{invalidName}</span>}
             </Col>
 
-            {/* phone */}
-            <Col md='12' className='mb-2'>
+            {/* statusShowTime */}
+            <Col md='6' className='mb-3'>
               <Label className='form-label'>
-                Trạng thái lịch chiếu <span>*</span>
+                Trạng thái của lịch chiếu <span>*</span>
               </Label>
               <Controller
-                name="phone"
-                control={control}
-                render={({ field }) => <Input
-                  {...field}
-                  type='number'
-                  placeholder="Nhập vào tên số điện thoại liên hệ"
-                />}
-              />
-              {errors.phone && (
-                <span className='errors'>{errors.phone.message}</span>
-              )}
-              {invalidName && <span className='errors'>{invalidName}</span>}
-            </Col>
-
-            {/* address */}
-            <Col md='12' className='mb-2'>
-              <Label className='form-label'>
-                Chương trình khuyến mãi <span>*</span>
-              </Label>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => <Input
-                  {...field}
-                  placeholder="Nhập vào tên địa chỉ liên hệ"
-                />}
-              />
-              {errors.address && (
-                <span className='errors'>{errors.address.message}</span>
-              )}
-              {invalidName && <span className='errors'>{invalidName}</span>}
-            </Col>
-
-            {/* description */}
-            <Col sm='12' className='mb-2'>
-              <Label className='form-label'>Mô tả về nhà cung cấp</Label>
-              <span className={`float-end ${wordOverDescription ? 'text-success' : 'text-danger fw-bold'}`} style={{ fontSize: '13px' }}> {MAX_LENGTH}/{wordCountDescription}</span>
-
-              <Controller
-                name="description"
+                name="statusShowTime"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    type='textarea'
-                    name='text'
-                    id='exampleText'
-                    rows='3'
-                    placeholder='Nhập mô tả về nhà cung cấp'
+                    type="select"
                     {...field}
-                  />
+                    onChange={(e) => {
+                      field.onChange(e.target.value);  // Đảm bảo giá trị được cập nhật đúng cách
+                    }}
+                  >
+                    {Object.values(optionStatus).map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </Input>
                 )}
               />
-              {errors.description && (
-                <span className='errors'>{errors.description.message}</span>
+
+              {errors.statusShowTime && (
+                <span className='errors'>{errors.statusShowTime.message}</span>
               )}
+
             </Col>
 
+            {/* voucher */}
+            <Col md='12' className='mb-5'>
+              <Label className='form-label'>
+                Chương trình khuyến mãi
+              </Label>
+              <Controller
+                name="voucher"
+                control={control}
+                render={({ field }) =>
+                  <Input
+                    type="select"
+                    {...field}
+                    className={`form-select ${!field.value ? 'none_Selected' : ''}`}
+                  >
+                    <option value="">Chọn chương trình khuyến mãi</option>
+                    {listVoucher && listVoucher?.length > 0 && Object?.values(listVoucher)?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </Input>
+                }
+              />
+              {errors.voucher && (
+                <span className='errors'>{errors.voucher.message}</span>
+              )}
+            </Col>
 
             {/* action button */}
             <Col className='mt-50'>
