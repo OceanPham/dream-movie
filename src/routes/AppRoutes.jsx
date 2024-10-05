@@ -17,7 +17,7 @@ import Showtime from "../views/pages/Managers/Showtime";
 import Employee from "../views/pages/Managers/employees";
 import Room from "../views/pages/Managers/room";
 
-const AppRouter = () => {
+const AppRouter = ({ setSelectedKey }) => {
   return (
     // <BrowserRouter>
     <Routes>
@@ -30,7 +30,7 @@ const AppRouter = () => {
         path="/"
         element={
           <PrivateRoute>
-            <Home />
+            <Home setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -46,7 +46,7 @@ const AppRouter = () => {
         path="/exportTicket"
         element={
           <PrivateRoute>
-            <ExportTicket />
+            <ExportTicket setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -54,7 +54,7 @@ const AppRouter = () => {
         path="/manager/showtime"
         element={
           <PrivateRoute>
-            <Showtime />
+            <Showtime setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -71,7 +71,7 @@ const AppRouter = () => {
         path="/manager/chairCategory"
         element={
           <PrivateRoute>
-            <ChairCategory />
+            <ChairCategory setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -88,7 +88,7 @@ const AppRouter = () => {
         path="/manager/producer"
         element={
           <PrivateRoute>
-            <Producer />
+            <Producer setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -106,7 +106,7 @@ const AppRouter = () => {
         path="/manager/movie"
         element={
           <PrivateRoute>
-            <ChairCategory />
+            <ChairCategory setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -114,7 +114,7 @@ const AppRouter = () => {
         path="/manager/food"
         element={
           <PrivateRoute>
-            <ChairCategory />
+            <ChairCategory setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -124,7 +124,7 @@ const AppRouter = () => {
         path="/manager/employee"
         element={
           <PrivateRoute>
-            <Employee />
+            <Employee setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />
@@ -133,7 +133,7 @@ const AppRouter = () => {
         path="/manager/room"
         element={
           <PrivateRoute>
-            <Room />
+            <Room setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />s

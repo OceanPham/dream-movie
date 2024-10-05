@@ -212,10 +212,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
     const end_time = new Date(new Date(start_time).getTime() + durationInMs);
     // console.log('end_time: ', end_time.toISOString());
-    console.log('data >>> ', data);
-    console.log('listShowTime >>> ', listShowTime);
     const listRoomCheck = listShowTime?.listShowTime?.filter((item) => item?.room?.id == data?.room)
-    console.log('listRoomCheck >>> ', listRoomCheck);
 
     const checkSchedule = checkValideShowTime(start_time, end_time, listRoomCheck)
     // console.log('checkSchedule: ', checkSchedule);

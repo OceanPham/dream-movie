@@ -3,7 +3,9 @@ import '../../../../assets/style/styleSecond.css'
 import '../../../../assets/style/_pagination.scss'
 import TableProducer from './TableProducer'
 
-const Checkout = () => {
+const Checkout = ({ setSelectedKey }) => {
+  setSelectedKey('id_producer')
+
   return (
     <Fragment>
       <TableProducer />

@@ -1,7 +1,8 @@
 // src/pages/Login.js
 import React from 'react';
 
-const ExportTicket = () => {
+const ExportTicket = ({ setSelectedKey }) => {
+    setSelectedKey('id_sellTicket')
 
 
     return (

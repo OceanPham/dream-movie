@@ -12,7 +12,7 @@ import UserReport from "../../components/UserReport";
 import LatestMovies from "../../components/Tables/LatestMovie";
 import LatestVoucher from "../../components/Tables/LatestVoucher";
 
-function Home() {
+const Home = () => {
     const { status, data: dataListShowTime } = useGetALLShowTime()
     const { statusUser, data: dataListUser } = useGetALLUser()
     const { statusCinema, data: dataListCinema } = useGetALLCinema()
