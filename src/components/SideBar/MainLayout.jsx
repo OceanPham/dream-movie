@@ -129,6 +129,8 @@ const MainLayout = () => {
                 navigate('/support');
                 break;
             default:
+                setTitleCurrentPage('Trang Chủ > Tổng Quát')
+                navigate('/');
                 break;
         }
     };
@@ -139,11 +141,14 @@ const MainLayout = () => {
         <Layout style={{ minHeight: '100vh' }} >
 
             <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div className='d-flex ps-3 align-items-center main_sideBar'>
-                    <img src={logo} alt='logo' width={50} className='main_logo' />
-                    <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
+                <div className='position-fixed'>
+
+                    <div className='d-flex ps-3 align-items-center main_sideBar '>
+                        <img src={logo} alt='logo' width={50} className='main_logo' />
+                        <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
+                    </div>
+                    <Menu style={{ border: 'none' }} theme="light" className={`${collapsed ? 'resizeWidth' : ''} sider_custom`} defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
                 </div>
-                <Menu theme="light" className='sider_custom' defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
             </Sider>
 
             <Layout className='main_layout'>

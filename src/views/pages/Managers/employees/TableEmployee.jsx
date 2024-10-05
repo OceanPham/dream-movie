@@ -1,55 +1,47 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Clock, Edit, Eye, MoreVertical, Trash } from 'react-feather'
 import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasBody, OffcanvasHeader, Table, UncontrolledDropdown, UncontrolledTooltip } from 'reactstrap'
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow'
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
-// import Pagination from '../../../components/paginations'
-import FilterShowtime from './FilterShowtime'
-import { Pagination } from 'antd';
 import classNames from 'classnames'
-import { useDeleteChairCategory, useGetALLChairCategory, useGetALLShowTime } from './hook'
+import { useDeleteEmployee, useGetALLEmployee } from './hook'
 import { Link, useNavigate } from 'react-router-dom'
-import FormChairCategory from './FormShowtime'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
+import FilterEmployee from './FilterEmployee'
+import FormEmployee from './FormEmployee'
+import { Pagination } from 'antd'
 
-const columnHeaders = ["STT", "Phim Chiếu", "Thời Gian Chiếu", "Thời Lượng", "Rạp Chiếu", "Phòng Chiếu", "Trạng Thái", "Hành Động"]
+const columnHeaders = ["STT", "Họ Tên", "Tên Tài Khoản", "Cập Nhật Lần Cuối", "Hành Động"]
 
-const TableShowtime = () => {
+const TableEmployee = () => {
   const role = useRole()
 
+  const [pages, setPage] = useState(0)
   const [canvasPlacement, setCanvasPlacement] = useState('start')
   const [canvasOpen, setCanvasOpen] = useState(false)
+  // const [edit, setEdit] = useState("")
   const navigate = useNavigate()
 
   const callbackCanvasOpen = (childData) => {
     setCanvasOpen(childData)
   }
   const toggleCanvasStart = () => {
-    navigate("/manager/showtime")
+    navigate("/manager/employee")
     setCanvasPlacement('start')
     setCanvasOpen(!canvasOpen)
   }
 
-  const itemsPerPage = 10;
-  const [startIndex, setStartIndex] = useState(0)
-  const [endIndex, setEndIndex] = useState(itemsPerPage)
-
-  const handlePageChange = (page) => {
-    setStartIndex((page - 1) * itemsPerPage)
-    setEndIndex(page * itemsPerPage)
-  }
-
-  const { status, data: dataListShowTime } = useGetALLShowTime()
-  const { status: sttDelete, mutate: deleteChairCategory } = useDeleteChairCategory()
+  const { status, data: dataListEmployee } = useGetALLEmployee()
+  const { status: sttDelete, mutate: deleteEmployee } = useDeleteEmployee()
 
 
-  const listShowTime = dataListShowTime && dataListShowTime?.length > 0 && dataListShowTime.map(((item) => item?.name?.toLowerCase()?.trim()))
+  const listNameUsed = dataListEmployee && dataListEmployee?.length > 0 && dataListEmployee.map(((item) => item?.name?.toLowerCase()?.trim()))
   const MySwal = withReactContent(Swal)
 
   const handleConfirmDelete = (id) => {
@@ -84,7 +76,7 @@ const TableShowtime = () => {
           showConfirmButton: false,
           allowOutsideClick: false,
         });
-        deleteChairCategory(id, {
+        deleteEmployee(id, {
           onSuccess: () => {
             waitingToast.close();
             MySwal.fire({
@@ -112,10 +104,20 @@ const TableShowtime = () => {
     })
   }
 
+  const itemsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(itemsPerPage)
+
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * itemsPerPage)
+    setEndIndex(page * itemsPerPage)
+  }
+
+
   return (
     <>
       <Card className='wrap-container border-none'>
-        <FilterShowtime listShowTime={dataListShowTime} />
+        <FilterEmployee listNameUsed={listNameUsed} />
         <Table responsive>
           {status === 'loading' ? (
             <React.Fragment>
@@ -127,7 +129,7 @@ const TableShowtime = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListShowTime?.length > 0 ? dataListShowTime.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
+                {dataListEmployee?.length > 0 ? dataListEmployee.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
                   return (
                     <tr>
                       <td className='ps-3'>
@@ -135,33 +137,20 @@ const TableShowtime = () => {
                       </td>
 
                       <td className='string-name'>
-                        {item?.film?.name ? item?.film?.name : <> <NoData /> </>}
+                        {item?.fullname ? item?.fullname : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        <Clock size={17} /> {timeReFormat(item?.start_time) ? timeReFormat(item?.start_time) : <> <NoData /> </>}
+                        {item?.username ? item?.username : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.film?.thoiluong ? item?.film?.thoiluong : <> <NoData /> </>}
-                      </td>
-
-                      <td className='string-name'>
-                        {item?.cinema?.name ? item?.cinema?.name : <> <NoData /> </>}
-                      </td>
-
-                      <td className='string-name'>
-                        {item?.room?.name ? item?.room?.name : <> <NoData /> </>}
-                      </td>
-
-                      <td className='string-name'>
-                        {item?.status ? item?.status : <> <NoData /> </>}
-
+                        <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
                       </td>
                       <td className='fw-bold string-name d-flex justify-content-center'>
                         <div className='column-action d-flex align-items-center'>
 
-                          <Link to={`/manager/showtime`} id={`pw-tooltip-${item.id}`}>
+                          <Link to={`/manager/employee`} id={`pw-tooltip-${item.id}`}>
                             <Eye size={17} className='mx-1' />
                           </Link>
                           <UncontrolledTooltip placement='top' target={`pw-tooltip-${item.id}`}>
@@ -196,7 +185,7 @@ const TableShowtime = () => {
                   <OffcanvasBody className={classNames({
                     'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
                   })}>
-                    <FormChairCategory parentCallback={callbackCanvasOpen} />
+                    <FormEmployee parentCallback={callbackCanvasOpen} />
                   </OffcanvasBody>
                 </Offcanvas>
               </tbody>
@@ -210,9 +199,10 @@ const TableShowtime = () => {
         /> */}
         <Pagination
           defaultCurrent={1}
-          total={dataListShowTime?.length}
+          total={dataListEmployee?.length}
           align="end"
           onChange={handlePageChange}
+          pageSize={itemsPerPage}
         />
       </Card>
       {/* <SliderTuTorial tag="" /> */}
@@ -220,4 +210,4 @@ const TableShowtime = () => {
     </>
   )
 }
-export default TableShowtime
+export default TableEmployee

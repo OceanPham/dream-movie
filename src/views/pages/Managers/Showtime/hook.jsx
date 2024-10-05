@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { API_CHAIRCATEGORY, API_CINEMA, API_LANGUAGE, API_MOVIE, API_ROOM, API_ScreeningFormat, API_ScreeningType, API_SHOWTIME, API_VOUCHER } from '../../../../components/constantsAPI'
+import { API_CHAIRCATEGORY, API_CINEMA, API_LANGUAGE, API_MOVIE, API_ROOM, API_ScreeningFormat, API_ScreeningType, API_SHOWTIME, API_USER, API_VOUCHER } from '../../../../components/constantsAPI'
 
 export const useGetALLChairCategory = () => {
   const request = async () => {
@@ -26,6 +26,15 @@ export const useGetALLCinema = () => {
     return res.data
   }
   const query = useQuery(["cinemas"], request, { refetchOnWindowFocus: false })
+  return query
+}
+
+export const useGetALLUser = () => {
+  const request = async () => {
+    const res = await axios.get(`${API_USER}`)
+    return res.data
+  }
+  const query = useQuery(["users"], request, { refetchOnWindowFocus: false })
   return query
 }
 

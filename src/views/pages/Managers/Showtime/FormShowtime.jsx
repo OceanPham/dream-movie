@@ -75,27 +75,13 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
     return totalMilliseconds;
   }
 
-  const checkValideShowTime = (start_Time, end_Time) => {
+  const checkValideShowTime = (start_Time, end_Time, listRoomCheck) => {
     const startTime = new Date(start_Time).getTime();
-    console.log('startTime; ', startTime);
-
     const endTime = new Date(end_Time).getTime();
-    console.log('endTime; ', endTime);
-
-    console.log('listShowTime: ', listShowTime);
-
-    for (const item of listShowTime?.listShowTime) {
-      console.log('item: ', item);
-
+    for (const item of listRoomCheck) {
       const startTimeExisting = new Date(item?.start_time).getTime();
-      console.log('startTimeExisting; ', startTimeExisting);
-
       const durationItem = convertDurationToMs(item?.film?.thoiluong || "00:00:00")
-      console.log('durationItem; ', durationItem);
-
       const endTimeExisting = startTimeExisting + durationItem
-      console.log('endTimeExisting; ', endTimeExisting);
-
 
       if (startTime <= startTimeExisting && startTimeExisting <= endTime) return false
       if (startTime <= startTimeExisting && (startTimeExisting <= endTime || endTimeExisting <= endTime)) return false
@@ -226,8 +212,12 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
     const end_time = new Date(new Date(start_time).getTime() + durationInMs);
     // console.log('end_time: ', end_time.toISOString());
+    console.log('data >>> ', data);
+    console.log('listShowTime >>> ', listShowTime);
+    const listRoomCheck = listShowTime?.listShowTime?.filter((item) => item?.room?.id == data?.room)
+    console.log('listRoomCheck >>> ', listRoomCheck);
 
-    const checkSchedule = checkValideShowTime(start_time, end_time)
+    const checkSchedule = checkValideShowTime(start_time, end_time, listRoomCheck)
     // console.log('checkSchedule: ', checkSchedule);
 
     if (!checkSchedule) {
@@ -261,6 +251,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
       }
     }
 
+    !data?.voucher && delete db_submit.voucher
 
     addShowTime(db_submit, {
       onSuccess: () => {

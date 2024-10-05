@@ -5,7 +5,6 @@ import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasB
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow'
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
-import Pagination from '../../../components/paginations'
 import FilterChairCategory from './FilterChairCategory'
 import classNames from 'classnames'
 import { useDeleteChairCategory, useGetALLChairCategory } from './hook'
@@ -16,6 +15,7 @@ import withReactContent from 'sweetalert2-react-content'
 import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
+import { Pagination } from 'antd'
 
 const columnHeaders = ["STT", "Tên Loại Ghế", "Giá Vé", "Số Lượng", "Cập Nhật Lần Cuối", "Hành Động"]
 
@@ -104,6 +104,15 @@ const TableChairCategory = () => {
     })
   }
 
+  const itemsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(itemsPerPage)
+
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * itemsPerPage)
+    setEndIndex(page * itemsPerPage)
+  }
+
   return (
     <>
       <Card className='wrap-container border-none'>
@@ -119,11 +128,11 @@ const TableChairCategory = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).map((item, index) => {
+                {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
                   return (
                     <tr>
                       <td className='ps-3'>
-                        {index + 1}
+                        {index + 1 + startIndex}
                       </td>
 
                       <td className='string-name'>
@@ -187,9 +196,11 @@ const TableChairCategory = () => {
           )}
         </Table>
         <Pagination
-          list_data={null}
-          setPage={setPage}
-          isPreviousData={'isPreviousData'}
+          defaultCurrent={1}
+          total={dataListChairCategory?.length}
+          align="end"
+          onChange={handlePageChange}
+          pageSize={itemsPerPage}
         />
       </Card>
       {/* <SliderTuTorial tag="" /> */}

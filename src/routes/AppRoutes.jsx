@@ -14,6 +14,8 @@ import ExportTicket from "../views/pages/Dashboard/ExportTicket";
 import ChairCategory from "../views/pages/Managers/ChairCategory";
 import Producer from "../views/pages/Managers/Producer";
 import Showtime from "../views/pages/Managers/Showtime";
+import Employee from "../views/pages/Managers/employees";
+import Room from "../views/pages/Managers/room";
 
 const AppRouter = () => {
   return (
@@ -116,6 +118,25 @@ const AppRouter = () => {
           </PrivateRoute>
         }
       />
+
+
+      <Route
+        path="/manager/employee"
+        element={
+          <PrivateRoute>
+            <Employee />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/manager/room"
+        element={
+          <PrivateRoute>
+            <Room />
+          </PrivateRoute>
+        }
+      />s
     </Routes>
     // </BrowserRouter>
   );

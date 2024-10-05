@@ -5,19 +5,20 @@ import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasB
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow'
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
-import Pagination from '../../../components/paginations'
-import FilterChairCategory from './FilterProducer'
+import FilterProducer from './FilterProducer'
 import classNames from 'classnames'
-import { useDeleteChairCategory, useGetALLChairCategory } from './hook'
+import { useDeleteProducer, useGetALLProducer } from './hook'
 import { Link, useNavigate } from 'react-router-dom'
-import FormChairCategory from './FormProducer'
+import FormProducer from './FormProducer'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
+import { Pagination } from 'antd'
 
-const columnHeaders = ["STT", "Tên NCC", "Trạng Thái", "Quốc Gia", "Số Điện Thoại", "Cập Nhật Lần Cuối", "Hành Động"]
+const columnHeaders = ["STT", "Tên NCC", "Cập Nhật Lần Cuối", "Hành Động"]
+// const columnHeaders = ["STT", "Tên NCC", "Trạng Thái", "Quốc Gia", "Số Điện Thoại", "Cập Nhật Lần Cuối", "Hành Động"]
 
 const TableProducer = () => {
   const role = useRole()
@@ -37,11 +38,11 @@ const TableProducer = () => {
     setCanvasOpen(!canvasOpen)
   }
 
-  const { status, data: dataListChairCategory } = useGetALLChairCategory()
-  const { status: sttDelete, mutate: deleteChairCategory } = useDeleteChairCategory()
+  const { status, data: dataListProducer } = useGetALLProducer()
+  const { status: sttDelete, mutate: deleteProducer } = useDeleteProducer()
 
 
-  const listNameUsed = dataListChairCategory && dataListChairCategory?.length > 0 && dataListChairCategory.map(((item) => item?.name?.toLowerCase()?.trim()))
+  const listNameUsed = dataListProducer && dataListProducer?.length > 0 && dataListProducer.map(((item) => item?.name?.toLowerCase()?.trim()))
   const MySwal = withReactContent(Swal)
 
   const handleConfirmDelete = (id) => {
@@ -76,7 +77,7 @@ const TableProducer = () => {
           showConfirmButton: false,
           allowOutsideClick: false,
         });
-        deleteChairCategory(id, {
+        deleteProducer(id, {
           onSuccess: () => {
             waitingToast.close();
             MySwal.fire({
@@ -103,11 +104,18 @@ const TableProducer = () => {
 
     })
   }
+  const itemsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(itemsPerPage)
 
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * itemsPerPage)
+    setEndIndex(page * itemsPerPage)
+  }
   return (
     <>
       <Card className='wrap-container border-none'>
-        <FilterChairCategory listNameUsed={listNameUsed} />
+        <FilterProducer listNameUsed={listNameUsed} />
         <Table responsive>
           {status === 'loading' ? (
             <React.Fragment>
@@ -119,28 +127,17 @@ const TableProducer = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).map((item, index) => {
+                {dataListProducer?.length > 0 ? dataListProducer.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
                   return (
                     <tr>
                       <td className='ps-3'>
-                        {index + 1}
+                        {index + 1 + startIndex}
                       </td>
 
                       <td className='string-name'>
                         {item?.name ? item?.name : <> <NoData /> </>}
                       </td>
 
-                      <td className='string-name'>
-                        {item?.name ? item?.name : <> <NoData /> </>}
-                      </td>
-
-                      <td className='string-name'>
-                        {item?.price ? item?.price + '.VND' : <> <NoData /> </>}
-                      </td>
-
-                      <td className='string-name'>
-                        {item?.seatCount ? item?.seatCount : <> <NoData /> </>}
-                      </td>
 
                       <td className='string-name'>
                         <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
@@ -183,7 +180,7 @@ const TableProducer = () => {
                   <OffcanvasBody className={classNames({
                     'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
                   })}>
-                    <FormChairCategory parentCallback={callbackCanvasOpen} />
+                    <FormProducer parentCallback={callbackCanvasOpen} />
                   </OffcanvasBody>
                 </Offcanvas>
               </tbody>
@@ -191,9 +188,11 @@ const TableProducer = () => {
           )}
         </Table>
         <Pagination
-          list_data={null}
-          setPage={setPage}
-          isPreviousData={'isPreviousData'}
+          defaultCurrent={1}
+          total={dataListProducer?.length}
+          align="end"
+          onChange={handlePageChange}
+          pageSize={itemsPerPage}
         />
       </Card>
       {/* <SliderTuTorial tag="" /> */}
