@@ -10,37 +10,39 @@ import moment from 'moment';
 // Định nghĩa schema với Yup để kiểm tra các trường dữ liệu
 const schema = Yup.object().shape({
   employeeName: Yup.string()
-    .required('Tên đăng nhập nhân viên không được để trống.')
-    .matches(/^[^\d][A-Za-z0-9]*$/, 'Tên đăng nhập nhân viên phải bắt đầu bằng chữ và bao gồm chữ và số.')
-    .max(50, 'Tên đăng nhập nhân viên không được dài quá 50 ký tự.'),
+    .required('Tên đăng nhập nhân viên không được để trống.') //1
+    .matches(/^[^\d][A-Za-z0-9]*$/, 'Tên đăng nhập nhân viên phải bắt đầu bằng chữ và bao gồm chữ và số.') //2
+    .max(50, 'Tên đăng nhập nhân viên không được dài quá 50 ký tự.') //3
+    .min(8, 'Tên đăng nhập nhân viên không được ít hơn 8 ký tự.'), //4
 
   voucherCode: Yup.string()
-    .required('Vui lòng nhập tên của mã giảm giá.') // Không nhập dữ liệu
-    .min(5, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') // Dữ liệu ít hơn 5 ký tự
-    .max(14, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.'), // Dữ liệu nhiều hơn 14 ký tự
+    .required('Vui lòng nhập tên của mã giảm giá.') //1 
+    .min(5, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') //2
+    .max(14, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') //3
+    .matches(/^[A-Za-z0-9]*$/, 'Mã giảm giá chỉ được chứa chữ và số, không có ký tự đặc biệt.'), // 4
   
   discountRate: Yup.number()
-    .required('Vui lòng nhập tỉ lệ chiết khấu.')
-    .min(5, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.')
-    .max(50, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.')
-    .typeError('Tỉ lệ chiết khấu phải là một số hợp lệ.'),
-  
+    .required('Vui lòng nhập tỉ lệ chiết khấu.') //1
+    .min(5, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.') //2
+    .max(50, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.') //3
+    .typeError('Tỉ lệ chiết khấu phải là một số hợp lệ.'), //4
+
   usageLimit: Yup.number()
-    .required('Vui lòng nhập hạn mức.')
-    .min(5000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.')
-    .max(15000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.')
-    .typeError('Hạn mức phải là một số hợp lệ.'),
+    .required('Vui lòng nhập hạn mức.') //1
+    .min(5000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.') //2
+    .max(15000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.') //3
+    .typeError('Hạn mức phải là một số hợp lệ.'), //4
 
   status: Yup.string()
-    .required('Vui lòng chọn tình trạng mã giảm giá.'),
+    .required('Vui lòng chọn tình trạng mã giảm giá.'), //1
 
   createdAt: Yup.date()
-    .required('Vui lòng chọn ngày tạo.')
-    .min(moment().startOf('day'), 'Hãy chọn ngày tạo hợp lệ.'),
+    .required('Vui lòng chọn ngày tạo.') //1
+    .min(moment().startOf('day'), 'Hãy chọn ngày tạo hợp lệ.'), //2
 
   expiryDate: Yup.date()
-    .required('Vui lòng chọn hạn dùng.')
-    .test('is-after-createdAt', 'Hạn dùng phải sau ngày tạo ít nhất 1 giờ.', function (value) {
+    .required('Vui lòng chọn hạn dùng.') //1
+    .test('is-after-createdAt', 'Hạn dùng phải sau ngày tạo ít nhất 1 giờ.', function (value) { //2
       const createdAt = this.resolve(Yup.ref('createdAt'));
       return moment(value).isAfter(moment(createdAt).add(1, 'hour'));
     }),
