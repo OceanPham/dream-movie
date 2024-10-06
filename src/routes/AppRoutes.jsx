@@ -16,7 +16,7 @@ import Producer from "../views/pages/Managers/Producer";
 import Showtime from "../views/pages/Managers/Showtime";
 import Employee from "../views/pages/Managers/employees";
 import Room from "../views/pages/Managers/room";
-
+import Voucher from "../views/pages/Managers/Voucher";
 const AppRouter = ({ setSelectedKey }) => {
   return (
     // <BrowserRouter>
@@ -80,6 +80,22 @@ const AppRouter = ({ setSelectedKey }) => {
         element={
           <PrivateRoute>
             <ChairCategory />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/voucher"
+        element={
+          <PrivateRoute>
+            <Voucher />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/voucher/:alias"
+        element={
+          <PrivateRoute>
+            <Voucher />
           </PrivateRoute>
         }
       />
