@@ -4,7 +4,6 @@ import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasB
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow';
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader';
 import LoadingRow from '../../../components/Tables/LoadingRow';
-import Pagination from '../../../components/paginations';
 import FilterFoodCategory from './FilterFoodCategory';
 import classNames from 'classnames';
 import { useDeleteFoodCategory, useGetALLFoodCategory } from './hook';
@@ -15,13 +14,14 @@ import withReactContent from 'sweetalert2-react-content';
 import useRole from '../../../../Auth/useRole';
 import { timeReFormat } from '../../../../hooks/useFormattedDate';
 import NoData from '../../../components/Tables/NoData';
+import { Pagination } from 'antd';
 
 const columnHeaders = ["STT", "Tên Loại Thực Phẩm", "Mô Tả", "Số Lượng Tối Đa", "Cập Nhật Lần Cuối", "Hành Động"];
 
 const TableFoodCategory = () => {
   const role = useRole();
 
-  const [pages, setPage] = useState(0);
+  const [page, setPage] = useState(1); // Đổi tên từ pages thành page
   const [canvasPlacement, setCanvasPlacement] = useState('start');
   const [canvasOpen, setCanvasOpen] = useState(false);
   const navigate = useNavigate();
@@ -101,6 +101,19 @@ const TableFoodCategory = () => {
     });
   };
 
+  // Định nghĩa hàm handlePageChange
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
+  // Định nghĩa biến itemsPerPage
+  const itemsPerPage = 10;
+
+  // Tính toán dữ liệu hiển thị dựa trên trang hiện tại và số lượng mục trên mỗi trang
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = dataListFoodCategory?.slice(startIndex, endIndex);
+
   return (
     <>
       <Card className='wrap-container border-none'>
@@ -115,11 +128,11 @@ const TableFoodCategory = () => {
             <React.Fragment>
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
-                {dataListFoodCategory?.length > 0 ? dataListFoodCategory.sort((a, b) => b.id - a.id).map((item, index) => {
+                {currentData?.length > 0 ? currentData.sort((a, b) => b.id - a.id).map((item, index) => {
                   return (
                     <tr key={item.id}>
                       <td className='ps-3'>
-                        {index + 1}
+                        {startIndex + index + 1}
                       </td>
                       <td className='string-name'>
                         {item?.name ? item?.name : <> <NoData /> </>}
@@ -173,10 +186,12 @@ const TableFoodCategory = () => {
             </React.Fragment>
           )}
         </Table>
-        <Pagination
-          list_data={null}
-          setPage={setPage}
-          isPreviousData={'isPreviousData'}
+        <Pagination 
+          defaultCurrent={1}
+          total={dataListFoodCategory?.length}
+          align="end"
+          onChange={handlePageChange}
+          pageSize={itemsPerPage}
         />
       </Card>
     </>
