@@ -18,7 +18,6 @@ import Employee from "../views/pages/Managers/employees";
 import Room from "../views/pages/Managers/room";
 import Voucher from "../views/pages/Managers/Voucher";
 import FoodCategory from "../views/pages/Managers/FoodCategory";
-import Setting from "../views/pages/Dashboard/Setting";
 import Profile from "../views/pages/Dashboard/Profile";
 import Movie from "../views/pages/Managers/movie";
 import DefaultAlert from "../views/components/DefaultAlert";
