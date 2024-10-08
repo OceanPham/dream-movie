@@ -17,6 +17,7 @@ import Showtime from "../views/pages/Managers/Showtime";
 import Employee from "../views/pages/Managers/employees";
 import Room from "../views/pages/Managers/room";
 import Voucher from "../views/pages/Managers/Voucher";
+import FoodCategory from "../views/pages/Managers/FoodCategory";
 const AppRouter = ({ setSelectedKey }) => {
   return (
     // <BrowserRouter>
@@ -144,7 +145,23 @@ const AppRouter = ({ setSelectedKey }) => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/manager/foodCategory/:alias"
+        element={
+          <PrivateRoute>
+            <FoodCategory />
+          </PrivateRoute>
+        }
+      />
 
+      <Route
+        path="/manager/foodCategory"
+        element={
+          <PrivateRoute>
+            <FoodCategory />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/manager/room"
         element={
@@ -154,6 +171,8 @@ const AppRouter = ({ setSelectedKey }) => {
         }
       />s
     </Routes>
+
+
     // </BrowserRouter>
   );
 };
