@@ -7,4 +7,4 @@ export const API_ScreeningType = 'http://localhost:8080/api/screeningtypes';
 export const API_LANGUAGE = 'http://localhost:8080/api/languages';
 export const API_VOUCHER = 'http://localhost:8080/api/vouchers';
 export const API_SHOWTIME = 'http://localhost:8080/api/show_times';
-
+export const API_FOODCATEGORY = 'http://localhost:8080/api/food_categories';

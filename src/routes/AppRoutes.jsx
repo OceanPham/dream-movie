@@ -14,6 +14,7 @@ import ExportTicket from "../views/pages/Dashboard/ExportTicket";
 import ChairCategory from "../views/pages/Managers/ChairCategory";
 import Producer from "../views/pages/Managers/Producer";
 import Showtime from "../views/pages/Managers/Showtime";
+import FoodCategory from "../views/pages/Managers/FoodCategory";
 
 const AppRouter = () => {
   return (
@@ -109,10 +110,18 @@ const AppRouter = () => {
         }
       />
       <Route
-        path="/manager/food"
+        path="/manager/foodCategory"
         element={
           <PrivateRoute>
-            <ChairCategory />
+            <FoodCategory />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/foodCategory/:alias"
+        element={
+          <PrivateRoute>
+            <FoodCategory />
           </PrivateRoute>
         }
       />
