@@ -39,7 +39,7 @@ const schema = Yup.object().shape({
     .typeError('Số lượng tối đa phải là số nguyên, vui lòng nhập lại!')
     .max(200, 'Số lượng ghế thuộc loại này tối đa mỗi phòng là 200.')
 });
-const FormChairCategory = ({ parentCallback, listNameUsed }) => {
+const FormEmployee = ({ parentCallback, listNameUsed }) => {
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -219,4 +219,4 @@ const FormChairCategory = ({ parentCallback, listNameUsed }) => {
 }
 
 
-export default FormChairCategory
+export default FormEmployee

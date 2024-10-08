@@ -1,13 +1,15 @@
-// src/pages/Login.js
-import React from 'react';
+import { Fragment } from 'react'
+import '../../../../assets/style/styleSecond.css'
+import '../../../../assets/style/_pagination.scss'
+import TableEmployee from './TableEmployee'
 
-const Employee = () => {
-    return (
-        <div>
-            <h1>ExportTicket Page</h1>
-            <button >ExportTicket</button>
-        </div>
-    );
-};
+const Checkout = ({ setSelectedKey }) => {
+  setSelectedKey('id_employee')
 
-export default Employee;
+  return (
+    <Fragment>
+      <TableEmployee />
+    </Fragment>
+  )
+}
+export default Checkout

@@ -50,85 +50,108 @@ const items = [
 const MainLayout = () => {
 
     const [titleCurrentPage, setTitleCurrentPage] = useState('Tổng Quát')
+    const [selectedKey, setSelectedKey] = useState(['id_overView']); // Set initial selected key
+
     const navigate = useNavigate();
     const handleMenuClick = ({ key }) => {
         switch (key) {
             case 'id_overView':
                 setTitleCurrentPage('Trang Chủ > Tổng Quát')
+                setSelectedKey('id_overView')
                 navigate('/');
                 break;
             case 'id_sellTicket':
                 setTitleCurrentPage('Trang Chủ > Xuất Vé')
+                setSelectedKey('id_sellTicket')
                 navigate('/exportTicket');
                 break;
             case 'id_employee':
                 setTitleCurrentPage('Quản Lý > Nhân Viên')
+                setSelectedKey('id_employee')
                 navigate('/manager/employee');
                 break;
             case 'id_movie':
                 setTitleCurrentPage('Quản Lý > Phim')
+                setSelectedKey('id_movie')
                 navigate('/manager/movie');
                 break;
             case 'id_schedule':
                 setTitleCurrentPage('Quản Lý > Lịch Chiếu')
+                setSelectedKey('id_schedule')
                 navigate('/manager/showtime');
                 break;
             case 'id_roomMovie':
                 setTitleCurrentPage('Quản Lý > Phòng Chiếu')
+                setSelectedKey('id_roomMovie')
                 navigate('/manager/room');
                 break;
             case 'id_voucher':
                 setTitleCurrentPage('Quản Lý > Mã Giảm giá')
+                setSelectedKey('id_voucher')
                 navigate('/manager/voucher');
                 break;
             case 'id_foodCategory':
                 setTitleCurrentPage('Quản Lý > Loại Thực Phẩm')
+                setSelectedKey('id_foodCategory')
                 navigate('/manager/foodCategory');
                 break;
             case 'id_food':
                 setTitleCurrentPage('Quản Lý > Thực Phẩm')
+                setSelectedKey('id_food')
                 navigate('/manager/food');
                 break;
             case 'id_movieCategory':
                 setTitleCurrentPage('Quản Lý > Loại Phim')
+                setSelectedKey('id_movieCategory')
                 navigate('/manager/movieCategory');
                 break;
             case 'id_chairCategory':
                 setTitleCurrentPage('Quản Lý > Loại Ghế')
+                setSelectedKey('id_chairCategory')
                 navigate('/manager/chairCategory');
                 break;
             case 'id_news':
                 setTitleCurrentPage('Quản Lý > Tin Tức')
+                setSelectedKey('id_news')
                 navigate('/manager/news');
                 break;
             case 'id_producer':
                 setTitleCurrentPage('Quản Lý > Nhà Cung Cấp')
+                setSelectedKey('id_producer')
                 navigate('/manager/producer');
                 break;
             case 'id_policy':
                 setTitleCurrentPage('Quản Lý > Quy Định')
+                setSelectedKey('id_policy')
                 navigate('/manager/policy');
                 break;
 
             case 'id_userinfo':
                 setTitleCurrentPage('Hồ Sơ > Thông Tin Cá Nhân')
+                setSelectedKey('id_userinfo')
                 navigate('/briefCase/userinfo');
                 break;
             case 'id_custome':
                 setTitleCurrentPage('Hồ Sơ > Tùy Chỉnh')
+                setSelectedKey('id_custome')
                 navigate('/briefCase/custome');
                 break;
 
             case 'id_setting':
                 setTitleCurrentPage('Cài Đặt')
+                setSelectedKey('id_setting')
                 navigate('/setting');
                 break;
 
             case 'id_support':
                 setTitleCurrentPage('Hỗ Trợ')
+                setSelectedKey('id_support')
                 navigate('/support');
                 break;
             default:
+                setTitleCurrentPage('Trang Chủ > Tổng Quát')
+                setSelectedKey('id_overView')
+                navigate('/');
                 break;
         }
     };
@@ -139,11 +162,14 @@ const MainLayout = () => {
         <Layout style={{ minHeight: '100vh' }} >
 
             <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div className='d-flex ps-3 align-items-center main_sideBar'>
-                    <img src={logo} alt='logo' width={50} className='main_logo' />
-                    <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
+                <div className='position-fixed'>
+
+                    <div className='d-flex ps-3 align-items-center main_sideBar '>
+                        <img src={logo} alt='logo' width={50} className='main_logo' />
+                        <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
+                    </div>
+                    <Menu style={{ border: 'none' }} theme="light" className={`${collapsed ? 'resizeWidth' : ''} sider_custom`} selectedKeys={selectedKey} mode="inline" items={items} onClick={handleMenuClick} />
                 </div>
-                <Menu theme="light" className='sider_custom' defaultSelectedKeys={['subDasboard']} mode="inline" items={items} onClick={handleMenuClick} />
             </Sider>
 
             <Layout className='main_layout'>
@@ -174,7 +200,7 @@ const MainLayout = () => {
                         <Breadcrumb.Item>{titleCurrentPage}</Breadcrumb.Item>
                     </Breadcrumb>
                     <>
-                        <AppRouter />
+                        <AppRouter setSelectedKey={setSelectedKey} />
                     </>
                 </Content>
             </Layout>

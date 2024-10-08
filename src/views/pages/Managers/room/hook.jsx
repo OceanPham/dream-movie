@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { API_CHAIRCATEGORY, API_PRODUCER } from '../../../../components/constantsAPI'
+import { API_CHAIRCATEGORY, API_EMPLOYEE, API_ROOM } from '../../../../components/constantsAPI'
 
-export const useGetALLProducer = () => {
+export const useGetALLRoom = () => {
   const request = async () => {
-    const res = await axios.get(`${API_PRODUCER}`)
+    const res = await axios.get(`${API_ROOM}`)
     return res.data
   }
-  const query = useQuery(["producers"], request, { refetchOnWindowFocus: false })
+  const query = useQuery(["rooms"], request, { refetchOnWindowFocus: false })
   return query
 }
 
@@ -35,7 +35,7 @@ const deleteChairCategory = async (id) => {
   return response.data;
 };
 
-export const useDeleteProducer = () => {
+export const useDeleteRoom = () => {
   const queryClient = useQueryClient();
 
   return useMutation(deleteChairCategory, {
