@@ -17,7 +17,7 @@ import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
 
-const columnHeaders = ["STT", "Tên Loại Ghế", "Giá Vé", "Số Lượng", "Cập Nhật Lần Cuối", "Hành Động"]
+const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng"]
 
 const TableVoucher = () => {
   const role = useRole()
@@ -46,7 +46,7 @@ const TableVoucher = () => {
 
   const handleConfirmDelete = (id) => {
     return MySwal.fire({
-      title: 'Bạn có chắc chắn muốn xóa loại ghế này?',
+      title: 'Bạn có chắc chắn muốn xóa voucher này?',
       text: "Bạn sẽ không thể khôi phục nó sau khi xóa!",
       icon: 'warning',
       showCancelButton: true,
@@ -62,7 +62,7 @@ const TableVoucher = () => {
         MySwal.fire({
           icon: 'error',
           title: 'Lỗi phân quyền!',
-          text: 'Bạn không được phân quyền xóa loại ghế.',
+          text: 'Bạn không được phân quyền xóa voucher.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -71,7 +71,7 @@ const TableVoucher = () => {
       else if (result.isConfirmed) {
         const waitingToast = MySwal.fire({
           title: 'Đang xóa!',
-          text: 'Loại ghế đang được xóa, vui lòng đợi!',
+          text: 'Voucher đang được xóa, vui lòng đợi!',
           icon: 'info',
           showConfirmButton: false,
           allowOutsideClick: false,
@@ -82,7 +82,7 @@ const TableVoucher = () => {
             MySwal.fire({
               icon: 'success',
               title: 'Đã xóa!',
-              text: 'Loại ghế đã được xóa thành công.',
+              text: 'Voucher đã được xóa thành công.',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -92,7 +92,7 @@ const TableVoucher = () => {
             MySwal.fire({
               icon: 'error',
               title: 'Lỗi!',
-              text: 'Xóa loại ghế không thành công.',
+              text: 'Xóa voucher không thành công.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }

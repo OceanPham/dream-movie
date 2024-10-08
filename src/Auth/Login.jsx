@@ -48,45 +48,45 @@ const Login = () => {
 
   const validatePassword = (_, value) => {
     if (!value) {
-      return Promise.reject(new Error('Mật khẩu không được bỏ trống!'));
+      return Promise.reject(new Error('Mật khẩu không được bỏ trống!')); //1
     }
     if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,50}$/.test(value)) {
-      return Promise.reject(new Error('Mật khẩu phải chứa ít nhất 1 chữ in hoa, 1 chữ thường, 1 chữ số và 1 ký tự đặc biệt!'));
+      return Promise.reject(new Error('Mật khẩu phải chứa ít nhất 1 chữ in hoa, 1 chữ thường, 1 chữ số và 1 ký tự đặc biệt!')); //2
     }
-    return Promise.resolve();
+    return Promise.resolve(); //3
   };
 
   const validateConfirmPassword = ({ getFieldValue }) => ({
     validator(_, value) {
       if (!value || getFieldValue('password') === value) {
-        return Promise.resolve();
+        return Promise.resolve(); // 1
       }
-      return Promise.reject(new Error('Mật khẩu nhập lại không khớp!'));
+      return Promise.reject(new Error('Mật khẩu nhập lại không khớp!')); // 2
     },
   });
 
   const validateFullname = (_, value) => {
     const regex = /^[a-zA-ZÀ-ỹ\s]{1,50}$/;
     if (!value) {
-      return Promise.reject(new Error('Họ và tên không được bỏ trống!'));
+      return Promise.reject(new Error('Họ và tên không được bỏ trống!')); //1
     }
     if (!regex.test(value)) {
-      return Promise.reject(new Error('Họ và tên không được chứa số và ký tự đặc biệt!'));
+      return Promise.reject(new Error('Họ và tên không được chứa số và ký tự đặc biệt!')); // 2
     }
-    return Promise.resolve();
+    return Promise.resolve(); // 3
   };
 
   const validateBirthday = (_, value) => {
     if (!value) {
-      return Promise.reject(new Error('Vui lòng chọn ngày sinh!'));
+      return Promise.reject(new Error('Vui lòng chọn ngày sinh!')); // 1
     }
     // Kiểm tra xem ngày sinh có lớn hơn ngày hiện tại trừ 14 năm không
-    const today = moment();
-    const fourteenYearsAgo = moment().subtract(14, 'years');
+    const today = moment(); // 2
+    const fourteenYearsAgo = moment().subtract(14, 'years'); // 2
     if (value.isAfter(fourteenYearsAgo)) {
-      return Promise.reject(new Error('Tuổi phải lớn hơn 14!'));
+      return Promise.reject(new Error('Tuổi phải lớn hơn 14!')); // 3
     }
-    return Promise.resolve();
+    return Promise.resolve(); // 4
   };
   
 
