@@ -8,7 +8,8 @@ import { MdOutlineLightMode } from 'react-icons/md';
 import { GoDotFill } from 'react-icons/go';
 import vn_flag from '../../assets/images/vn_flag.png'
 import AppRouter from '../../routes/AppRoutes';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import UserDropdown from '../../views/components/UserDropdown';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -35,9 +36,9 @@ const items = [
         getItem('Thực Phẩm ', 'id_food', <FaRegCircle />),
         getItem('Loại Phim', 'id_movieCategory', <FaRegCircle />),
         getItem('Loại Ghế', 'id_chairCategory', <FaRegCircle />),
-        getItem('Tin Tức', 'id_news', <FaRegCircle />),
+        // getItem('Tin Tức', 'id_news', <FaRegCircle />),
         getItem('Nhà Cung Cấp', 'id_producer', <FaRegCircle />),
-        getItem('Quy Định', 'id_policy', <FaRegCircle />),
+        // getItem('Quy Định', 'id_policy', <FaRegCircle />),
     ]),
     getItem('Hồ Sơ', 'subBriefcase', <UserOutlined className='custom_icon_sidebar' />, [
         getItem('Thông tin cá nhân', 'id_userinfo', <FaRegCircle />),
@@ -163,11 +164,13 @@ const MainLayout = () => {
 
             <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className='position-fixed'>
+                    <Link to={'/'} className='text-decoration-none'>
 
-                    <div className='d-flex ps-3 align-items-center main_sideBar '>
-                        <img src={logo} alt='logo' width={50} className='main_logo' />
-                        <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
-                    </div>
+                        <div className='d-flex ps-3 align-items-center main_sideBar '>
+                            <img src={logo} alt='logo' width={50} className='main_logo' />
+                            <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
+                        </div>
+                    </Link>
                     <Menu style={{ border: 'none' }} theme="light" className={`${collapsed ? 'resizeWidth' : ''} sider_custom`} selectedKeys={selectedKey} mode="inline" items={items} onClick={handleMenuClick} />
                 </div>
             </Sider>
@@ -186,10 +189,11 @@ const MainLayout = () => {
                         <div className='d-flex align-items-center float-end main_header'>
                             <img src={vn_flag} alt='logo' width={40} />
                             <MdOutlineLightMode size={30} style={{ width: '65px' }} className='border-end border-1 border-black' />
-                            <span className='px-3'> Pham Ngoc Huy</span>
+                            {/* <span className='px-3'> Pham Ngoc Huy</span> */}
                             <div className='position-relative'>
-                                <img src={logo} alt='logo' width={45} className='rounded-circle me-3' />
-                                <GoDotFill size={25} className='dot_status' />
+                                <UserDropdown />
+                                {/* <img src={logo} alt='logo' width={45} className='rounded-circle me-3' /> */}
+                                {/* <GoDotFill size={25} className='dot_status' /> */}
                             </div>
                         </div>
                     </div>

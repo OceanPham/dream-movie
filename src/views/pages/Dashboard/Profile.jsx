@@ -2,8 +2,8 @@
 import React from 'react';
 import DefaultAlert from '../../components/DefaultAlert';
 
-const ExportTicket = ({ setSelectedKey }) => {
-    setSelectedKey('id_sellTicket')
+const Profile = ({ setSelectedKey }) => {
+    setSelectedKey('id_userinfo')
 
 
     return (
@@ -13,4 +13,4 @@ const ExportTicket = ({ setSelectedKey }) => {
     );
 };
 
-export default ExportTicket;
+export default Profile;
