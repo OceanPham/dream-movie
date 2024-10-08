@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react'
 import { Clock, Edit, Eye, MoreVertical, Trash } from 'react-feather'
 import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasBody, OffcanvasHeader, Table, UncontrolledDropdown, UncontrolledTooltip } from 'reactstrap'
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow'
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
-import Pagination from '../../../components/paginations'
 import FilterVoucher from './FilterVoucher'
 import classNames from 'classnames'
 import { useDeleteVoucher, useGetALLVoucher } from './hook'
@@ -16,16 +14,16 @@ import withReactContent from 'sweetalert2-react-content'
 import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
+import { Pagination } from 'antd'
 
-const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng"]
+const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng", "Hành động"]
 
 const TableVoucher = () => {
   const role = useRole()
 
-  const [pages, setPage] = useState(0)
+  const [page, setPage] = useState(1) // Đổi tên từ pages thành page
   const [canvasPlacement, setCanvasPlacement] = useState('start')
   const [canvasOpen, setCanvasOpen] = useState(false)
-  // const [edit, setEdit] = useState("")
   const navigate = useNavigate()
 
   const callbackCanvasOpen = (childData) => {
@@ -39,7 +37,6 @@ const TableVoucher = () => {
 
   const { status, data: dataListVoucher } = useGetALLVoucher()
   const { status: sttDelete, mutate: deleteVoucher } = useDeleteVoucher()
-
 
   const listNameUsed = dataListVoucher && dataListVoucher?.length > 0 && dataListVoucher.map(((item) => item?.name?.toLowerCase()?.trim()))
   const MySwal = withReactContent(Swal)
@@ -104,6 +101,19 @@ const TableVoucher = () => {
     })
   }
 
+  // Định nghĩa hàm handlePageChange
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
+  // Định nghĩa biến itemsPerPage
+  const itemsPerPage = 10;
+
+  // Tính toán dữ liệu hiển thị dựa trên trang hiện tại và số lượng mục trên mỗi trang
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = dataListVoucher?.slice(startIndex, endIndex);
+
   return (
     <>
       <Card className='wrap-container border-none'>
@@ -119,11 +129,11 @@ const TableVoucher = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {dataListVoucher?.length > 0 ? dataListVoucher.sort((a, b) => b.id - a.id).map((item, index) => {
+                {currentData?.length > 0 ? currentData.sort((a, b) => b.id - a.id).map((item, index) => {
                   return (
-                    <tr>
+                    <tr key={item.id}>
                       <td className='ps-3'>
-                        {index + 1}
+                        {startIndex + index + 1}
                       </td>
 
                       <td className='string-name'>
@@ -131,20 +141,29 @@ const TableVoucher = () => {
                       </td>
 
                       <td className='string-name'>
-                        {item?.price ? item?.price + '.VND' : <> <NoData /> </>}
+                        {item?.ti_le_chiet_khau ? item?.ti_le_chiet_khau : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.seatCount ? item?.seatCount : <> <NoData /> </>}
+                        {item?.han_muc ? item?.han_muc : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
+                        {item?.tinh_trang == 1 ? "Đang hoạt động" : "Đã hết hạn" }
                       </td>
+
+                      <td className='string-name'>
+                        <Clock size={17} /> {timeReFormat(item?.ngay_tao) ? timeReFormat(item?.ngay_tao) : <> <NoData /> </>}
+                      </td>
+
+                      <td className='string-name'>
+                        <Clock size={17} /> {timeReFormat(item?.han_dung) ? timeReFormat(item?.han_dung) : <> <NoData /> </>}
+                      </td>
+
                       <td className='fw-bold string-name d-flex justify-content-center'>
                         <div className='column-action d-flex align-items-center'>
 
-                          <Link to={`/manager/chairCategory`} id={`pw-tooltip-${item.id}`}>
+                          <Link to={`/manager/voucher`} id={`pw-tooltip-${item.id}`}>
                             <Eye size={17} className='mx-1' />
                           </Link>
                           <UncontrolledTooltip placement='top' target={`pw-tooltip-${item.id}`}>
@@ -187,13 +206,13 @@ const TableVoucher = () => {
           )}
         </Table>
         <Pagination
-          list_data={null}
-          setPage={setPage}
-          isPreviousData={'isPreviousData'}
+          defaultCurrent={1}
+          total={dataListVoucher?.length}
+          align="end"
+          onChange={handlePageChange}
+          pageSize={itemsPerPage}
         />
       </Card>
-      {/* <SliderTuTorial tag="" /> */}
-
     </>
   )
 }
