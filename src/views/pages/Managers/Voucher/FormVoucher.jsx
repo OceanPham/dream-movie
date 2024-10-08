@@ -19,18 +19,18 @@ const schema = Yup.object().shape({
     .required('Vui lòng nhập tên của mã giảm giá.') //1 
     .min(5, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') //2
     .max(14, 'Vui lòng nhập tên mã giảm giá từ 5-14 kí tự.') //3
-    .matches(/^[A-Za-z0-9]*$/, 'Mã giảm giá chỉ được chứa chữ và số, không có ký tự đặc biệt.'), // 4
+    .matches(/^[A-Za-z0-9]+$/, 'Mã giảm giá chỉ được chứa chữ và số, không có ký tự đặc biệt.'), // 4
   
   discountRate: Yup.number()
     .required('Vui lòng nhập tỉ lệ chiết khấu.') //1
     .min(5, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.') //2
     .max(50, 'Tỉ lệ chiết khấu phải trong khoảng từ 5-50%.') //3
-    .typeError('Tỉ lệ chiết khấu phải là một số hợp lệ.'), //4
+    .typeError('Tỉ lệ chiết khấu phải là một số hợp lệ.'), //5
 
   usageLimit: Yup.number()
     .required('Vui lòng nhập hạn mức.') //1
     .min(5000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.') //2
-    .max(15000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.') //3
+    .max(15000000, 'Hạn mức phải từ 5,000,000 đến 15,000,000 VNĐ.') // 3
     .typeError('Hạn mức phải là một số hợp lệ.'), //4
 
   status: Yup.string()
