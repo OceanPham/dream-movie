@@ -1,13 +1,15 @@
-// src/pages/Login.js
-import React from 'react';
+import { Fragment } from 'react'
+import '../../../../assets/style/styleSecond.css'
+import '../../../../assets/style/_pagination.scss'
+import TableMovie from './TableMovie'
 
-const Movie = () => {
-    return (
-        <div>
-            <h1>Movie Page</h1>
-            <button >Movie</button>
-        </div>
-    );
-};
+const Checkout = ({ setSelectedKey }) => {
+  setSelectedKey('id_movie')
 
-export default Movie;
+  return (
+    <Fragment>
+      <TableMovie />
+    </Fragment>
+  )
+}
+export default Checkout

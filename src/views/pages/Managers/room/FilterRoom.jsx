@@ -35,11 +35,11 @@ const FilterEmployee = (listNameUsed) => {
       {/* <Toaster /> */}
       <div className='btn-wrap'>
         <div className='demo-inline-spacing'>
-          <Link to={`/manager/chairCategory/add-chair-category`}>
-            <Button color='primary'>
-              Thêm
-            </Button>
-          </Link>
+          {/* <Link to={`/manager/chairCategory/add-chair-category`}> */}
+          <Button color='primary'>
+            Thêm
+          </Button>
+          {/* </Link> */}
           <Offcanvas className='wrap-form w-50' direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasStart}>
             <OffcanvasHeader toggle={toggleCanvasStart}>Thêm loại ghế</OffcanvasHeader>
             <OffcanvasBody

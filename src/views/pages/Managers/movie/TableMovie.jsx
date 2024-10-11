@@ -1,49 +1,53 @@
+
 import React, { useState } from 'react'
 import { Clock, Edit, Eye, MoreVertical, Trash } from 'react-feather'
 import { Card, DropdownItem, DropdownMenu, DropdownToggle, Offcanvas, OffcanvasBody, OffcanvasHeader, Table, UncontrolledDropdown, UncontrolledTooltip } from 'reactstrap'
 import CustomMessageRow from '../../../components/Tables/CustomMessageRow'
 import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
-import FilterVoucher from './FilterVoucher'
+import FilterMovie from './FilterMovie'
 import classNames from 'classnames'
-import { useDeleteVoucher, useGetALLVoucher } from './hook'
+import { useDeleteChairCategory, useGetALLChairCategory } from './hook'
 import { Link, useNavigate } from 'react-router-dom'
-import FormVoucher from './FormVoucher'
+import FormMovie from './FormMovie'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
 import { Pagination } from 'antd'
+import { useGetALLMovie } from '../Showtime/hook'
 
-const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng", "Hành động"]
+const columnHeaders = ["STT", "Tên Phim", "Thời Lượng", "Trạng Thái", "Công Chiếu", "Cập Nhật Lần Cuối", "Hành Động"]
 
-const TableVoucher = () => {
+const TableMovie = () => {
   const role = useRole()
 
-  const [page, setPage] = useState(1) // Đổi tên từ pages thành page
+  const [pages, setPage] = useState(0)
   const [canvasPlacement, setCanvasPlacement] = useState('start')
   const [canvasOpen, setCanvasOpen] = useState(false)
+  // const [edit, setEdit] = useState("")
   const navigate = useNavigate()
 
   const callbackCanvasOpen = (childData) => {
     setCanvasOpen(childData)
   }
   const toggleCanvasStart = () => {
-    navigate("/manager/voucher")
+    navigate("/manager/chairCategory")
     setCanvasPlacement('start')
     setCanvasOpen(!canvasOpen)
   }
 
-  const { status, data: dataListVoucher } = useGetALLVoucher()
-  const { status: sttDelete, mutate: deleteVoucher } = useDeleteVoucher()
+  const { status, data: dataListMovie } = useGetALLMovie()
+  const { status: sttDelete, mutate: deleteChairCategory } = useDeleteChairCategory()
 
-  const listNameUsed = dataListVoucher && dataListVoucher?.length > 0 && dataListVoucher.map(((item) => item?.name?.toLowerCase()?.trim()))
+
+  const listNameUsed = dataListMovie && dataListMovie?.length > 0 && dataListMovie.map(((item) => item?.name?.toLowerCase()?.trim()))
   const MySwal = withReactContent(Swal)
 
   const handleConfirmDelete = (id) => {
     return MySwal.fire({
-      title: 'Bạn có chắc chắn muốn xóa voucher này?',
+      title: 'Bạn có chắc chắn muốn xóa loại ghế này?',
       text: "Bạn sẽ không thể khôi phục nó sau khi xóa!",
       icon: 'warning',
       showCancelButton: true,
@@ -59,7 +63,7 @@ const TableVoucher = () => {
         MySwal.fire({
           icon: 'error',
           title: 'Lỗi phân quyền!',
-          text: 'Bạn không được phân quyền xóa voucher.',
+          text: 'Bạn không được phân quyền xóa loại ghế.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -68,18 +72,18 @@ const TableVoucher = () => {
       else if (result.isConfirmed) {
         const waitingToast = MySwal.fire({
           title: 'Đang xóa!',
-          text: 'Voucher đang được xóa, vui lòng đợi!',
+          text: 'Loại ghế đang được xóa, vui lòng đợi!',
           icon: 'info',
           showConfirmButton: false,
           allowOutsideClick: false,
         });
-        deleteVoucher(id, {
+        deleteChairCategory(id, {
           onSuccess: () => {
             waitingToast.close();
             MySwal.fire({
               icon: 'success',
               title: 'Đã xóa!',
-              text: 'Voucher đã được xóa thành công.',
+              text: 'Loại ghế đã được xóa thành công.',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -89,7 +93,7 @@ const TableVoucher = () => {
             MySwal.fire({
               icon: 'error',
               title: 'Lỗi!',
-              text: 'Xóa voucher không thành công.',
+              text: 'Xóa loại ghế không thành công.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -101,23 +105,19 @@ const TableVoucher = () => {
     })
   }
 
-  // Định nghĩa hàm handlePageChange
-  const handlePageChange = (page) => {
-    setPage(page);
-  };
-
-  // Định nghĩa biến itemsPerPage
   const itemsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(itemsPerPage)
 
-  // Tính toán dữ liệu hiển thị dựa trên trang hiện tại và số lượng mục trên mỗi trang
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = dataListVoucher?.slice(startIndex, endIndex);
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * itemsPerPage)
+    setEndIndex(page * itemsPerPage)
+  }
 
   return (
     <>
       <Card className='wrap-container border-none'>
-        <FilterVoucher listNameUsed={listNameUsed} />
+        <FilterMovie listNameUsed={listNameUsed} />
         <Table responsive>
           {status === 'loading' ? (
             <React.Fragment>
@@ -129,11 +129,11 @@ const TableVoucher = () => {
               <CustomTableHeader columnHeaders={columnHeaders} />
               <tbody>
 
-                {currentData?.length > 0 ? currentData.sort((a, b) => b.id - a.id).map((item, index) => {
+                {dataListMovie?.length > 0 ? dataListMovie.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr>
                       <td className='ps-3'>
-                        {startIndex + index + 1}
+                        {index + 1 + startIndex}
                       </td>
 
                       <td className='string-name'>
@@ -141,29 +141,22 @@ const TableVoucher = () => {
                       </td>
 
                       <td className='string-name'>
-                        {item?.ti_le_chiet_khau ? item?.ti_le_chiet_khau : <> <NoData /> </>}
+                        {item?.thoiluong ? item?.thoiluong : <> <NoData /> </>}
                       </td>
 
                       <td className='string-name'>
-                        {item?.han_muc ? item?.han_muc : <> <NoData /> </>}
+                        {item?.trangthai == 1 ? 'Hoạt động' : 'Đã chiếu'}
                       </td>
-
                       <td className='string-name'>
-                        {item?.tinh_trang == 1 ? "Đang hoạt động" : "Đã hết hạn" }
+                        <Clock size={17} /> {timeReFormat(item?.ngaycongchieu) ? timeReFormat(item?.ngaycongchieu) : <> <NoData /> </>}
                       </td>
-
                       <td className='string-name'>
-                        <Clock size={17} /> {timeReFormat(item?.ngay_tao) ? timeReFormat(item?.ngay_tao) : <> <NoData /> </>}
+                        <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
                       </td>
-
-                      <td className='string-name'>
-                        <Clock size={17} /> {timeReFormat(item?.han_dung) ? timeReFormat(item?.han_dung) : <> <NoData /> </>}
-                      </td>
-
                       <td className='fw-bold string-name d-flex justify-content-center'>
                         <div className='column-action d-flex align-items-center'>
 
-                          <Link to={`/manager/voucher`} id={`pw-tooltip-${item.id}`}>
+                          <Link to={`/manager/chairCategory`} id={`pw-tooltip-${item.id}`}>
                             <Eye size={17} className='mx-1' />
                           </Link>
                           <UncontrolledTooltip placement='top' target={`pw-tooltip-${item.id}`}>
@@ -198,7 +191,7 @@ const TableVoucher = () => {
                   <OffcanvasBody className={classNames({
                     'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
                   })}>
-                    <FormVoucher parentCallback={callbackCanvasOpen} />
+                    <FormMovie parentCallback={callbackCanvasOpen} />
                   </OffcanvasBody>
                 </Offcanvas>
               </tbody>
@@ -207,13 +200,15 @@ const TableVoucher = () => {
         </Table>
         <Pagination
           defaultCurrent={1}
-          total={dataListVoucher?.length}
+          total={dataListMovie?.length}
           align="end"
           onChange={handlePageChange}
           pageSize={itemsPerPage}
         />
       </Card>
+      {/* <SliderTuTorial tag="" /> */}
+
     </>
   )
 }
-export default TableVoucher
+export default TableMovie

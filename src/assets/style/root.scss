@@ -1,5 +1,6 @@
 $primary-color: #3F91F5;
 $online: #00DC16;
+$black: #22292f !default; // 231f48 22292f
 
 .root {
     background: #000;
@@ -133,5 +134,100 @@ $online: #00DC16;
         border-radius: 2px;
         -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
         background-color: #c3c3c3;
+    }
+}
+
+.dropdown-user {
+    list-style-type: none !important;
+
+    .dropdown-menu {
+        left: auto !important;
+        right: 0;
+        margin: 0px 20px;
+    }
+
+    .nav-link {
+        // Override margin from .nav-tabs
+        margin-right: 0;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 5px;
+
+        .nav-link.active,
+        .nav-link.active:hover,
+        .nav-link.active:focus {
+            border-bottom-color: transparent; //$nav-tabs-justified-active-link-border-color;
+        }
+    }
+}
+
+// Global
+.dropdown-menu {
+    .dropdown-item {
+        outline: 0;
+        display: flex;
+        align-items: center;
+        height: 45px
+    }
+
+    .dropdown-item:focus {
+        outline: 0;
+    }
+}
+
+// Dropdown Icon
+.dropdown-icon-wrapper {
+    .dropdown-toggle:after {
+        display: none;
+    }
+
+    .dropdown-menu {
+        min-width: auto;
+
+        .dropdown-item {
+            padding: 0.5rem 1.1rem;
+            cursor: pointer;
+        }
+    }
+}
+
+a.dropdown-user-link {
+    display: flex;
+    align-items: center;
+    list-style-type: none !important;
+
+    .user-name {
+        display: inline-block;
+        margin-bottom: 0.435rem;
+        margin-left: 0.2rem;
+    }
+
+    .user-status {
+        font-size: smaller;
+    }
+
+    img {
+        box-shadow: 0 4px 8px 0 rgba($black, 0.12), 0 2px 4px 0 rgba($black, 0.08);
+    }
+}
+
+a.dropdown-user-link {
+    .user-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        float: left;
+        margin: 0px 10px;
+    }
+}
+
+// navbar toggle menu size (display below lg)
+a.menu-toggle {
+
+    i,
+    svg {
+        height: 1.6rem;
+        width: 1.6rem;
+        font-size: 1.6rem;
     }
 }
