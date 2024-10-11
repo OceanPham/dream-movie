@@ -90,27 +90,30 @@ const Login = () => {
   };
   
 
-  const validatePhoneNumber = (_, value) => {
-    const regex = /^0\d{9}$/;
-    if (!value) {
-      return Promise.reject(new Error('Vui lòng nhập số điện thoại!'));
+  const validatePhoneNumber = (_, value) => { //1
+    const regex = /^0\d{9}$/; //2
+    if (!value) { //3
+      return Promise.reject(new Error('Vui lòng nhập số điện thoại!')); //4
     }
-    if (!regex.test(value)) {
-      return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
+    if (!regex.test(value)) { //5
+      return Promise.reject(new Error('Số điện thoại không hợp lệ!')); //6
     }
-    return Promise.resolve();
+    return Promise.resolve(); // 7
   };
 
-  const validateEmail = (_, value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (!value) {
-      return Promise.reject(new Error('Vui lòng nhập email!'));
+  const validateEmail = (_, value) => { //1
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; //2
+    if (!value) { //3
+      return Promise.reject(new Error('Vui lòng nhập email!')); //4
     }
-    if (!emailRegex.test(value)) {
-      return Promise.reject(new Error('Email không hợp lệ!'));
+    if (value.length > 254) { //5
+      return Promise.reject(new Error('Email vượt quá giới hạn 254 ký tự!')); //6
     }
-    return Promise.resolve();
-  };
+    if (!emailRegex.test(value)) { //7
+      return Promise.reject(new Error('Email không hợp lệ!')); //8
+    }
+    return Promise.resolve(); // 9
+};
 
   return (
     <>

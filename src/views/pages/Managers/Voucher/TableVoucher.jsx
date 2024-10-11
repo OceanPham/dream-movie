@@ -17,7 +17,7 @@ import useRole from '../../../../Auth/useRole'
 import { timeReFormat } from '../../../../hooks/useFormattedDate'
 import NoData from '../../../components/Tables/NoData'
 
-const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng"]
+const columnHeaders = ["STT", "Tên Voucher", "Tỉ lệ chiết khấu", "Hạn mức", "Tình trạng", "Ngày tạo", "Hạn dùng", "Hành động"]
 
 const TableVoucher = () => {
   const role = useRole()

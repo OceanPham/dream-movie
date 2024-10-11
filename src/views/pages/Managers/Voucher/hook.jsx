@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { API_CHAIRCATEGORY } from '../../../../components/constantsAPI'
+import { API_VOUCHER } from '../../../../components/constantsAPI'
 
 export const useGetALLVoucher = () => {
   const request = async () => {
-    const res = await axios.get(`${API_CHAIRCATEGORY}`)
+    const res = await axios.get(`${API_VOUCHER}`)
     return res.data
   }
   const query = useQuery(["voucher"], request, { refetchOnWindowFocus: false })
@@ -15,7 +15,7 @@ export const useAddVoucher = () => {
   const request = async (db_submit) => {
     const config = {
       method: 'post',
-      url: API_CHAIRCATEGORY,
+      url: API_VOUCHER,
       data: db_submit,
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const useAddVoucher = () => {
 
 
 const deleteVoucher = async (id) => {
-  const response = await axios.delete(`${API_CHAIRCATEGORY}/${id}`);
+  const response = await axios.delete(`${API_VOUCHER}/${id}`);
   return response.data;
 };
 
