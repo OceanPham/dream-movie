@@ -147,6 +147,7 @@ const TableEmployee = () => {
                       <td className='string-name'>
                         <Clock size={17} /> {timeReFormat(item?.updatedAt) ? timeReFormat(item?.updatedAt) : <> <NoData /> </>}
                       </td>
+
                       <td className='fw-bold string-name d-flex justify-content-center'>
                         <div className='column-action d-flex align-items-center'>
 

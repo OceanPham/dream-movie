@@ -1,18 +1,7 @@
-// ** React Imports
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-
-// ** Store & Actions
-// import { useDispatch } from 'react-redux'
-
-// ** Third Party Components
 import { User, Mail, CheckSquare, MessageSquare, Settings, CreditCard, HelpCircle, Power } from 'react-feather'
-
-// ** Reactstrap Imports
 import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap'
-
-// ** Default Avatar Image
-import { Avatar } from 'antd'
 import useAuth from '../../hooks/useAuth'
 import handleLogout from '../../hooks/handleLogout'
 import logo from "../../assets/images/logo.png";
@@ -39,10 +28,8 @@ const UserDropdown = () => {
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
         <div className='user-nav d-sm-flex d-none'>
-          <span className='user-name fw-bold'>{(userData && userData['username']) || 'John Doe'}</span>
-          {/* <span className='user-status'>{(userData && userData.role) || 'Admin'}</span> */}
+          <p className='user-name fw-bold'>{(userData && userData?.full_name) || 'Ocean Pham'} <span className={`fw-normal ${userData?.role?.role_name === 'admin' ? 'text-success' : 'text-danger'}`}>( {(userData && userData?.role?.role_name) || 'user'} )</span> </p>
         </div>
-        {/* <Avatar img={logo} imgHeight='40' imgWidth='40' status='online' /> */}
         <img src={logo} alt='logo' width={45} className='rounded-circle me-3' />
 
       </DropdownToggle>

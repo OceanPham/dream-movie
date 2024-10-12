@@ -1,12 +1,8 @@
-let roleUser = 'admin'; // Mặc định là admin
-
 const useRole = () => {
+    const userInfo = localStorage.getItem('userData');
+    const parsedUser = JSON.parse(userInfo);
+    const roleUser = parsedUser?.role?.role_name
     return roleUser;
-};
+}
 
-// Hàm để thay đổi role trong quá trình test hoặc khi cần
-export const setRoleUser = (role) => {
-    roleUser = role;
-};
-
-export default useRole;
+export default useRole

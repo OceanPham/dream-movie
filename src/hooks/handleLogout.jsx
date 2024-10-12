@@ -1,8 +1,8 @@
-
 const handleLogout = () => {
+    const userInfo = localStorage.getItem('userData');
+    if (userInfo) {
+        localStorage.removeItem('userData');
+    }
+};
 
-    const userInfo = localStorage.getItem('users')
-    return !!userInfo
-}
-
-export default handleLogout
+export default handleLogout;
