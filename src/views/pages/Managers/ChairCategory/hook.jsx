@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { API_CHAIRCATEGORY } from '../../../../components/constantsAPI'
+import { API_CHAIRCATEGORY, API_USER } from '../../../../components/constantsAPI'
 
 export const useGetALLChairCategory = () => {
   const request = async () => {
@@ -16,6 +16,25 @@ export const useAddChairCategory = () => {
     const config = {
       method: 'post',
       url: API_CHAIRCATEGORY,
+      data: db_submit,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+    const res = await axios(config);
+    return res.data;
+  };
+
+  const mutation = useMutation(request);
+  return mutation;
+};
+
+
+export const useAddUser = () => {
+  const request = async (db_submit) => {
+    const config = {
+      method: 'post',
+      url: API_USER,
       data: db_submit,
       headers: {
         'Content-Type': 'application/json',
