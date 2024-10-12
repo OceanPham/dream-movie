@@ -1,8 +1,12 @@
+let roleUser = 'admin'; // Mặc định là admin
 
 const useRole = () => {
-    // const roleUser = 'employee'
-    const roleUser = 'admin'
     return roleUser;
-}
+};
 
-export default useRole
+// Hàm để thay đổi role trong quá trình test hoặc khi cần
+export const setRoleUser = (role) => {
+    roleUser = role;
+};
+
+export default useRole;
