@@ -1,7 +1,7 @@
-
 const useRole = () => {
-    // const roleUser = 'employee'
-    const roleUser = 'admin'
+    const userInfo = localStorage.getItem('userData');
+    const parsedUser = JSON.parse(userInfo);
+    const roleUser = parsedUser?.role?.role_name
     return roleUser;
 }
 

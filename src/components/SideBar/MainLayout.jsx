@@ -165,7 +165,6 @@ const MainLayout = () => {
             <Sider className='sider_parent' style={{ background: '#fff' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className='position-fixed'>
                     <Link to={'/'} className='text-decoration-none'>
-
                         <div className='d-flex ps-3 align-items-center main_sideBar '>
                             <img src={logo} alt='logo' width={50} className='main_logo' />
                             <span className={`${collapsed ? 'd-none' : ''} main_name fw-bold ps-2`}> Dream Movie</span>
@@ -189,11 +188,8 @@ const MainLayout = () => {
                         <div className='d-flex align-items-center float-end main_header'>
                             <img src={vn_flag} alt='logo' width={40} />
                             <MdOutlineLightMode size={30} style={{ width: '65px' }} className='border-end border-1 border-black' />
-                            {/* <span className='px-3'> Pham Ngoc Huy</span> */}
                             <div className='position-relative'>
                                 <UserDropdown />
-                                {/* <img src={logo} alt='logo' width={45} className='rounded-circle me-3' /> */}
-                                {/* <GoDotFill size={25} className='dot_status' /> */}
                             </div>
                         </div>
                     </div>
