@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, set } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button, Card, CardBody, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useGetALLFilm, useGetALLFilmCategoryID } from './hook';
+import { useGetALLFilm, useGetALLFilmCategoryID, useAddFilm, useGetAllSupplier } from './hook';
 import useRole from '../../../../Auth/useRole';
 import { toast } from 'react-toastify';
+import { useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 const FormMovie = ({ parentCallback, listNameUsed }) => {
   // Schema xác thực dữ liệu
@@ -50,9 +52,17 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
   });
 
   const { status, data: dataListCategoryId } = useGetALLFilmCategoryID();
+  const { status: statusSupplier, data: dataListSupplierId } = useGetAllSupplier();
   const role = useRole();
+  const { status: sttEdit, mutate: addFilm } = useAddFilm();
+  const queryClient = useQueryClient();
+  const [invalidName, setInvalidName] = useState('');
+  const navigate = useNavigate();
 
   const listCategoryId = dataListCategoryId?.map((item) => {
+    return { value: item.id, label: item.name };
+  })
+  const listSupplierId = dataListSupplierId?.map((item) => {
     return { value: item.id, label: item.name };
   })
   const { register, handleSubmit, control, formState: { errors } } = useForm({
@@ -85,7 +95,19 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
       toast.error('Tên phim đã tồn tại, vui lòng chọn tên khác.');
       return false;
     }
-    parentCallback(db_submit);
+    setInvalidName('');
+    
+    addFilm(db_submit, {
+      onSuccess: () => {
+        toast.success("Thêm phim thành công");
+        setTimeout(() => {
+          navigate("/manager/movie");
+          parentCallback();
+          queryClient.invalidateQueries('film');
+        }, 3000);
+      },
+      onError: () => toast.error('Thêm phim không thành công'),
+    })
   };
 
   return (
@@ -116,7 +138,7 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={listNameUsed.suppliers}
+                  options={listSupplierId}
                   placeholder="Chọn mã nhà cung cấp"
                 />
               )}

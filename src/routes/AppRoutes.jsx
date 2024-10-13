@@ -21,7 +21,6 @@ import FoodCategory from "../views/pages/Managers/FoodCategory";
 import Profile from "../views/pages/Dashboard/Profile";
 import Movie from "../views/pages/Managers/movie";
 import DefaultAlert from "../views/components/DefaultAlert";
-import Films from "../views/pages/Managers/Films";
 
 const AppRouter = ({ setSelectedKey }) => {
   return (
