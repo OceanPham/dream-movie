@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, Controller, set } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Button, Card, CardBody, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
+import { Button, Card, CardBody, Form, FormGroup, Label, Input, FormFeedback, Col } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -65,14 +65,19 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
   const listSupplierId = dataListSupplierId?.map((item) => {
     return { value: item.id, label: item.name };
   })
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, watch, handleSubmit, control, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
+
+  //Theo dõi sự thay đổi của categoryId
+  // const categoryId = watch('categoryId')
+  // console.log('categoryId: ', categoryId);
+  // console.log('typeof categoryId: ', typeof (categoryId));
+
   const onSubmit = (data) => {
     // Them log kiem tra du lieu
     console.log(data);
-    console.log("Is data an object? ", typeof data === 'object');
-    
+
     if (role !== 'admin') {
       toast.error('Bạn không được phân quyền thêm phim!');
       return;
@@ -96,7 +101,9 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
       return false;
     }
     setInvalidName('');
-    
+
+    console.log('db_submit: ', db_submit);
+
     addFilm(db_submit, {
       onSuccess: () => {
         toast.success("Thêm phim thành công");
@@ -124,11 +131,33 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
                   {...field}
                   options={listCategoryId}
                   placeholder="Chọn mã thể loại"
+                  onChange={(selectedOption) => field.onChange(selectedOption)}
                 />
               )}
             />
-            {errors.categoryId && <FormFeedback>{errors.categoryId.message}</FormFeedback>}
+            {errors.categoryId && (
+              <span className='errors'>{errors.categoryId.message}</span>
+            )}
           </FormGroup>
+
+
+          {/* <FormGroup>
+            <Label for="categoryId">Mã thể loại</Label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={listCategoryId}
+                  placeholder="Chọn mã thể loại"
+                />
+              )}
+            />
+            {errors.categoryId && (
+              <span className='errors'>{errors.categoryId.message}</span>
+            )}
+          </FormGroup> */}
 
           <FormGroup>
             <Label for="supplierId">Mã nhà cung cấp</Label>
@@ -143,30 +172,56 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
                 />
               )}
             />
-            {errors.supplierId && <FormFeedback>{errors.supplierId.message}</FormFeedback>}
+            {errors.supplierId && (
+              <span className='errors'>{errors.supplierId.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
             <Label for="name">Tên phim</Label>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                placeholder="Nhập vào tên phim"
+              />}
+            />
+            {errors.name && (
+              <span className='errors'>{errors.name.message}</span>
+            )}
+
+          </FormGroup>
+
+
+          {/* <FormGroup>
+            <Label for="name">Tên phim</Label>
             <Input
               id="name"
               name="name"
-              {...register('name')}
+              {...register('name')} // Đảm bảo rằng bạn truyền chính xác
               invalid={errors.name ? true : false}
             />
+            {errors.name && (
+              <span className='errors'>{errors.name.message}</span>
+            )}
             {errors.name && <FormFeedback>{errors.name.message}</FormFeedback>}
-          </FormGroup>
+          </FormGroup> */}
 
           <FormGroup>
             <Label for="duration">Thời lượng (phút)</Label>
-            <Input
-              id="duration"
+            <Controller
               name="duration"
-              type="number"
-              {...register('duration')}
-              invalid={errors.duration ? true : false}
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                type='number'
+                placeholder="Nhập vào thời lượng phim"
+              />}
             />
-            {errors.duration && <FormFeedback>{errors.duration.message}</FormFeedback>}
+            {errors.duration && (
+              <span className='errors'>{errors.duration.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -183,19 +238,26 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
                 />
               )}
             />
-            {errors.releaseDate && <FormFeedback>{errors.releaseDate.message}</FormFeedback>}
+            {errors.releaseDate && (
+              <span className='errors'>{errors.releaseDate.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
             <Label for="image">Ảnh phim</Label>
-            <Input
-              id="image"
+            <Controller
               name="image"
-              type="file"
-              {...register('image')}
-              invalid={errors.image ? true : false}
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                type='file'
+                placeholder="Chọn ảnh phim"
+              />}
             />
-            {errors.image && <FormFeedback>{errors.image.message}</FormFeedback>}
+
+            {errors.image && (
+              <span className='errors'>{errors.image.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -215,42 +277,57 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
                 />
               )}
             />
-            {errors.status && <FormFeedback>{errors.status.message}</FormFeedback>}
+            {errors.status && (
+              <span className='errors'>{errors.status.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
             <Label for="url">Đường dẫn</Label>
-            <Input
-              id="url"
+            <Controller
               name="url"
-              {...register('url')}
-              invalid={errors.url ? true : false}
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                placeholder="Nhập đường dẫn"
+              />}
             />
-            {errors.url && <FormFeedback>{errors.url.message}</FormFeedback>}
+            {errors.url && (
+              <span className='errors'>{errors.url.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
             <Label for="summary">Tóm tắt</Label>
-            <Input
-              id="summary"
+            <Controller
               name="summary"
-              type="textarea"
-              {...register('summary')}
-              invalid={errors.summary ? true : false}
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                placeholder="Tóm tắt về bộ phim"
+              />}
             />
-            {errors.summary && <FormFeedback>{errors.summary.message}</FormFeedback>}
+
+            {errors.summary && (
+              <span className='errors'>{errors.summary.message}</span>
+            )}
           </FormGroup>
 
           <FormGroup>
             <Label for="age">Độ tuổi</Label>
-            <Input
-              id="age"
+            <Controller
               name="age"
-              type="number"
-              {...register('age')}
-              invalid={errors.age ? true : false}
+              control={control}
+              render={({ field }) => <Input
+                {...field}
+                type='number'
+                placeholder="Chọn độ tuổi được phép xem phim"
+              />}
             />
-            {errors.age && <FormFeedback>{errors.age.message}</FormFeedback>}
+
+            {errors.age && (
+              <span className='errors'>{errors.age.message}</span>
+            )}
           </FormGroup>
 
           <Button type="submit" color="primary">Thêm</Button>

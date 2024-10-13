@@ -30,20 +30,40 @@ export const useGetAllSupplier = () => {
   return query
 }
 
-export const useAddFilm = async (data) => {  // Khai bao 1 ham bat dong bo, tu dong bien doi 1 ham thanh promise, Khi gọi tới hàm async nó sẽ xử lý mọi thứ và được trả về kết quả trong hàm của nó, Async cho phép sử dụng Await.
-  const request = async (db_submit) => {  
+export const useAddFilm2 = async (data) => {  // Khai bao 1 ham bat dong bo, tu dong bien doi 1 ham thanh promise, Khi gọi tới hàm async nó sẽ xử lý mọi thứ và được trả về kết quả trong hàm của nó, Async cho phép sử dụng Await.
+  const request = async (db_submit) => {
     const config = {  // doi tuong cau hinh yeu cau HTTP gui len server
       method: 'post',
       URL: API_FILM,
       data: db_submit,
       header: {
         'Content-Type': 'application/json'
-      }  
+      }
     };
     const res = await axios(config); // axios la 1 thu vien HTTP client dua tren Promise, giup thuc hien cac yeu cau HTTP (GET, POST, PUT, DELETE) de dang
     return res.data;
   }
 }
+
+
+export const useAddFilm = () => {
+  const request = async (db_submit) => {
+    const config = {
+      method: 'post',
+      url: API_FILM,
+      data: db_submit,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+    const res = await axios(config);
+    return res.data;
+  };
+
+  const mutation = useMutation(request);
+  return mutation;
+};
+
 
 const deleteFilm = async (id) => {
   const response = await axios.delete(`${API_FILM}`);
