@@ -129,6 +129,14 @@ const AppRouter = ({ setSelectedKey }) => {
         }
       />
       <Route
+        path="/manager/movie/:alias"
+        element={
+          <PrivateRoute>
+            <Movie setSelectedKey={setSelectedKey} />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/manager/food"
         element={
           <PrivateRoute>
@@ -198,22 +206,6 @@ const AppRouter = ({ setSelectedKey }) => {
         element={
           <PrivateRoute>
             <DefaultAlert />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/manager/movie"
-        element={
-          <PrivateRoute>
-            <Films setSelectedKey={setSelectedKey} />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/manager/movie/:alias"
-        element={
-          <PrivateRoute>
-            <Films setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />

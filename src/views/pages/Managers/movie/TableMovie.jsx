@@ -7,7 +7,7 @@ import CustomTableHeader from '../../../components/Tables/CustomTableHeader'
 import LoadingRow from '../../../components/Tables/LoadingRow'
 import FilterMovie from './FilterMovie'
 import classNames from 'classnames'
-import { useDeleteChairCategory, useGetALLChairCategory } from './hook'
+import { useDeleteFilm, useGetALLChairCategory } from './hook'
 import { Link, useNavigate } from 'react-router-dom'
 import FormMovie from './FormMovie'
 import Swal from 'sweetalert2'
@@ -33,13 +33,13 @@ const TableMovie = () => {
     setCanvasOpen(childData)
   }
   const toggleCanvasStart = () => {
-    navigate("/manager/chairCategory")
+    navigate("/manager/movie")
     setCanvasPlacement('start')
     setCanvasOpen(!canvasOpen)
   }
 
   const { status, data: dataListMovie } = useGetALLMovie()
-  const { status: sttDelete, mutate: deleteChairCategory } = useDeleteChairCategory()
+  const { status: sttDelete, mutate: deleteFilm } = useDeleteFilm()
 
 
   const listNameUsed = dataListMovie && dataListMovie?.length > 0 && dataListMovie.map(((item) => item?.name?.toLowerCase()?.trim()))
@@ -47,7 +47,7 @@ const TableMovie = () => {
 
   const handleConfirmDelete = (id) => {
     return MySwal.fire({
-      title: 'Bạn có chắc chắn muốn xóa loại ghế này?',
+      title: 'Bạn có chắc chắn muốn xóa phim này?',
       text: "Bạn sẽ không thể khôi phục nó sau khi xóa!",
       icon: 'warning',
       showCancelButton: true,
@@ -77,13 +77,13 @@ const TableMovie = () => {
           showConfirmButton: false,
           allowOutsideClick: false,
         });
-        deleteChairCategory(id, {
+        deleteFilm(id, {
           onSuccess: () => {
             waitingToast.close();
             MySwal.fire({
               icon: 'success',
               title: 'Đã xóa!',
-              text: 'Loại ghế đã được xóa thành công.',
+              text: 'Phim đã được xóa thành công.',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -93,7 +93,7 @@ const TableMovie = () => {
             MySwal.fire({
               icon: 'error',
               title: 'Lỗi!',
-              text: 'Xóa loại ghế không thành công.',
+              text: 'Xóa phim không thành công.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -191,7 +191,7 @@ const TableMovie = () => {
                   <OffcanvasBody className={classNames({
                     'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'
                   })}>
-                    <FormMovie parentCallback={callbackCanvasOpen} />
+                    <FormMovie parentCallback={callbackCanvasOpen} listNameUsed={listNameUsed}/>
                   </OffcanvasBody>
                 </Offcanvas>
               </tbody>

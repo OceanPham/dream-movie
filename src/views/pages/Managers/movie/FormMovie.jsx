@@ -1,222 +1,241 @@
-import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from "react-hook-form"
-import { toast } from 'react-toastify'
-import { useQueryClient } from 'react-query'
-import { useNavigate } from "react-router-dom"
-import { Button, Card, CardBody, Col, Input, Label, Row, Spinner } from 'reactstrap'
-import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAddChairCategory } from './hook'
-import useRole from '../../../../Auth/useRole'
+import * as yup from 'yup';
+import { Button, Card, CardBody, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useGetALLFilm, useGetALLFilmCategoryID } from './hook';
+import useRole from '../../../../Auth/useRole';
+import { toast } from 'react-toastify';
 
-// Định nghĩa schema với Yup
-const schema = Yup.object().shape({
-  //Tên loại ghế
-  chairCategory: Yup.string()
-    .required('Tên loại ghế không được để trống.')
-    .min(3, 'Tên loại ghế phải có ít nhất 3 ký tự.')
-    .max(50, 'Tên loại ghế không được dài quá 50 ký tự.')
-    .matches(/^[^\d]/, 'Tên loại ghế không được bắt đầu bằng số.')
-    .matches(/^[A-Za-zÀ-ỹà-ỹ0-9\s]+$/, 'Tên loại ghế không được phép chứa kí tự đặc biệt.')
-  ,
-
-  // Mô tả loại ghế (Không bắt buộc, tối đa 300 ký tự)
-  description: Yup.string()
-    .max(300, 'Mô tả loại ghế không được vượt quá 300 ký tự.'),
-
-  // Giá vé (Bắt buộc, kiểu số nguyên, lớn hơn 0)
-  ticketPrice: Yup.number()
-    .required('Vui lòng nhập giá vé.')
-    .min(1, 'Giá vé phải lớn hơn 0.')
-    .typeError('Giá vé phải là số nguyên, vui lòng nhập lại!')
-    .integer('Giá vé phải là số nguyên, vui lòng nhập lại!'),
-
-  // Số lượng tối đa mỗi phòng (Bắt buộc, kiểu số nguyên, lớn hơn 0)
-  maxSeats: Yup.number()
-    .required('Vui lòng nhập số lượng ghế tối đa mỗi phòng.')
-    .min(1, 'Số lượng ghế tối đa phải lớn hơn 0.')
-    .integer('Số lượng tối đa phải là số nguyên, vui lòng nhập lại!')
-    .typeError('Số lượng tối đa phải là số nguyên, vui lòng nhập lại!')
-    .max(200, 'Số lượng ghế thuộc loại này tối đa mỗi phòng là 200.')
-});
 const FormMovie = ({ parentCallback, listNameUsed }) => {
+  // Schema xác thực dữ liệu
+  const schema = yup.object().shape({
+    categoryId: yup.object().required('Vui lòng chọn một mã thể loại'),
+    supplierId: yup.object().required('Vui lòng chọn một mã nhà cung cấp'),
+    name: yup.string()
+      .required('Tên phim không được để trống.')
+      .min(2, 'Tên phim không được ngắn hơn 2 ký tự')
+      .max(50, 'Tên phim không được dài quá 50 ký tự.')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Tên phim không được phép chứa kí tự đặc biệt.')
+      .test('unique', 'Tên phim đã tồn tại, vui lòng chọn tên khác.', (value) => {
+        const errName = listNameUsed?.listNameUsed?.includes(value.toLowerCase());
+        return !errName;
+      }),
+    duration: yup.number()
+      .required('Thời lượng phim không được để trống')
+      .positive('Thời lượng phim phải là số nguyên')
+      .integer('Thời lượng phim phải là số nguyên')
+      .min(40, 'Thời lượng phim phải lớn hơn hoặc bằng 40')
+      .max(200, 'Thời lượng phim phải nhỏ hơn hoặc bằng 200'),
+    releaseDate: yup.date()
+      .required('Vui lòng chọn ngày công chiếu.')
+      .min(new Date(), 'Vui lòng chọn ngày công chiếu lớn hơn hoặc bằng ngày hiện tại'),
+    image: yup.mixed()
+      .required('Vui lòng chọn ảnh cho phim.')
+      .test('fileType', 'Vui lòng chọn một ảnh hợp lệ', (value) => {
+        return value && ['image/jpeg', 'image/png', 'image/jpg'].includes(value[0]?.type);
+      }),
+    status: yup.object().required('Trạng thái của phim là bắt buộc'),
+    url: yup.string().url('Vui lòng nhập đường dẫn hợp lệ').nullable(),
+    summary: yup.string()
+      .required('Tóm tắt phim không được để trống')
+      .max(300, 'Độ dài tóm tắt phim không quá 300 ký tự'),
+    age: yup.number()
+      .required('Độ tuổi là bắt buộc')
+      .positive('Độ tuổi phải là số nguyên dương')
+      .integer('Độ tuổi phải là số nguyên'),
+  });
 
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-  const { control, handleSubmit, watch, formState: { errors } } = useForm({ resolver: yupResolver(schema), })
-  const { status: sttEdit, mutate: addChairCategory } = useAddChairCategory()
-  const role = useRole()
+  const { status, data: dataListCategoryId } = useGetALLFilmCategoryID();
+  const role = useRole();
 
-  const [invalidName, setInvalidName] = useState('')
-  const MAX_LENGTH = 300
-  const description = watch('description')
-  const [wordCountDescription, setWordCountDescription] = useState(0);
-  const [wordOverDescription, setWordOverDescription] = useState(false);
-
-
-  useEffect(() => {
-    setWordCountDescription(description ? description.length : 0)
-    if (description ? (description.length <= MAX_LENGTH) : 0) setWordOverDescription(true)
-    if (description ? (description.length > MAX_LENGTH) : 0) setWordOverDescription(false)
-
-  }, [description])
-
+  const listCategoryId = dataListCategoryId?.map((item) => {
+    return { value: item.id, label: item.name };
+  })
+  const { register, handleSubmit, control, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
   const onSubmit = (data) => {
-
+    // Them log kiem tra du lieu
+    console.log(data);
+    console.log("Is data an object? ", typeof data === 'object');
+    
     if (role !== 'admin') {
-      toast.error('Bạn không được phân quyền thêm loại ghế!')
-      return
+      toast.error('Bạn không được phân quyền thêm phim!');
+      return;
     }
+
     const db_submit = {
-      name: data?.chairCategory?.trim() || '',
-      price: data?.ticketPrice || '',
-      seatCount: data?.maxSeats || '',
-      description: data?.description?.trim() || '',
-    }
+      categoryId: data.categoryId.value,
+      supplierId: data.supplierId.value,
+      name: data.name.trim(),
+      duration: data.duration,
+      releaseDate: data.releaseDate,
+      image: data.image[0],
+      status: data.status.value,
+      url: data.url,
+      summary: data.summary.trim(),
+      age: data.age,
+    };
     const errName = listNameUsed?.listNameUsed?.includes(db_submit.name.toLowerCase());
     if (errName) {
-      setInvalidName('Tên loại ghế đã tồn tại, vui lòng chọn tên khác.')
+      toast.error('Tên phim đã tồn tại, vui lòng chọn tên khác.');
       return false;
     }
-    setInvalidName('')
-
-    addChairCategory(db_submit, {
-      onSuccess: () => {
-        toast.success('Thêm loại ghế thành công!')
-        setTimeout(() => {
-          navigate("/manager/chairCategory")
-          parentCallback()
-          queryClient.invalidateQueries('chairCategories'); // Invalidate the chair category query to refetch the updated data
-        }, 3000);
-      },
-      onError: () => toast.error('Thêm loại ghế không thành công!'),
-    })
-  }
-
+    parentCallback(db_submit);
+  };
 
   return (
     <Card>
       <CardBody>
-        <form
-          className='mt-2'
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Row>
-
-            <Col md='12' className='mb-2'>
-              <Label className='form-label'>
-                Tên loại ghế <span>*</span>
-              </Label>
-              <Controller
-                name="chairCategory"
-                control={control}
-                render={({ field }) => <Input
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormGroup>
+            <Label for="categoryId">Mã thể loại</Label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <Select
                   {...field}
-                  placeholder="Nhập vào tên loại ghế"
-                />}
-              />
-              {errors.chairCategory && (
-                <span className='errors'>{errors.chairCategory.message}</span>
+                  options={listCategoryId}
+                  placeholder="Chọn mã thể loại"
+                />
               )}
-              {invalidName && <span className='errors'>{invalidName}</span>}
-            </Col>
+            />
+            {errors.categoryId && <FormFeedback>{errors.categoryId.message}</FormFeedback>}
+          </FormGroup>
 
-            <Col md='12' className='mb-2'>
-              <Label className='form-label'>
-                Giá vé loại ghế (.VND) <span>*</span>
-              </Label>
-              <Controller
-                name="ticketPrice"
-                control={control}
-                render={({ field }) => <Input
+          <FormGroup>
+            <Label for="supplierId">Mã nhà cung cấp</Label>
+            <Controller
+              name="supplierId"
+              control={control}
+              render={({ field }) => (
+                <Select
                   {...field}
-                  type='number'
-                  placeholder="Nhập vào giá vé của loại ghế"
-                />}
-              />
-              {errors.ticketPrice && (
-                <span className='errors'>{errors.ticketPrice.message}</span>
+                  options={listNameUsed.suppliers}
+                  placeholder="Chọn mã nhà cung cấp"
+                />
               )}
-            </Col>
+            />
+            {errors.supplierId && <FormFeedback>{errors.supplierId.message}</FormFeedback>}
+          </FormGroup>
 
-            <Col md='12' className='mb-2'>
-              <Label className='form-label'>
-                Số ghế tối đa có trong một phòng <span>*</span>
-              </Label>
-              <Controller
-                name="maxSeats"
-                control={control}
-                render={({ field }) => <Input
+          <FormGroup>
+            <Label for="name">Tên phim</Label>
+            <Input
+              id="name"
+              name="name"
+              {...register('name')}
+              invalid={errors.name ? true : false}
+            />
+            {errors.name && <FormFeedback>{errors.name.message}</FormFeedback>}
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="duration">Thời lượng (phút)</Label>
+            <Input
+              id="duration"
+              name="duration"
+              type="number"
+              {...register('duration')}
+              invalid={errors.duration ? true : false}
+            />
+            {errors.duration && <FormFeedback>{errors.duration.message}</FormFeedback>}
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="releaseDate">Ngày công chiếu</Label>
+            <Controller
+              name="releaseDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
                   {...field}
-                  type='number'
-                  placeholder="Nhập vào số ghế tối đa có trong một phòng"
-                />}
-              />
-              {errors.maxSeats && (
-                <span className='errors'>{errors.maxSeats.message}</span>
+                  selected={field.value}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Chọn ngày công chiếu"
+                />
               )}
-            </Col>
+            />
+            {errors.releaseDate && <FormFeedback>{errors.releaseDate.message}</FormFeedback>}
+          </FormGroup>
 
-            <Col sm='12' className='mb-2'>
-              <Label className='form-label'>Mô tả về loại ghế</Label>
-              <span className={`float-end ${wordOverDescription ? 'text-success' : 'text-danger fw-bold'}`} style={{ fontSize: '13px' }}> {MAX_LENGTH}/{wordCountDescription}</span>
+          <FormGroup>
+            <Label for="image">Ảnh phim</Label>
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              {...register('image')}
+              invalid={errors.image ? true : false}
+            />
+            {errors.image && <FormFeedback>{errors.image.message}</FormFeedback>}
+          </FormGroup>
 
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type='textarea'
-                    name='text'
-                    id='exampleText'
-                    rows='3'
-                    placeholder='Nhập mô tả về loại ghế'
-                    {...field}
-                  />
-                )}
-              />
-              {errors.description && (
-                <span className='errors'>{errors.description.message}</span>
+          <FormGroup>
+            <Label for="status">Trạng thái của phim</Label>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={[
+                    { value: 'active', label: 'Hoạt động' },
+                    { value: 'cancelled', label: 'Đã hủy' },
+                    { value: 'postponed', label: 'Tạm hoãn' }
+                  ]}
+                  placeholder="Chọn trạng thái"
+                />
               )}
-            </Col>
+            />
+            {errors.status && <FormFeedback>{errors.status.message}</FormFeedback>}
+          </FormGroup>
 
-            <Col className='mt-50'>
-              {(sttEdit === "loading") ? (
-                <Button
-                  color='primary'
-                  className='me-1'
-                  disabled
-                >
-                  <span className='loading-spinner'><Spinner /></span>
-                  Loading...
-                </Button>
+          <FormGroup>
+            <Label for="url">Đường dẫn</Label>
+            <Input
+              id="url"
+              name="url"
+              {...register('url')}
+              invalid={errors.url ? true : false}
+            />
+            {errors.url && <FormFeedback>{errors.url.message}</FormFeedback>}
+          </FormGroup>
 
-              ) : (
+          <FormGroup>
+            <Label for="summary">Tóm tắt</Label>
+            <Input
+              id="summary"
+              name="summary"
+              type="textarea"
+              {...register('summary')}
+              invalid={errors.summary ? true : false}
+            />
+            {errors.summary && <FormFeedback>{errors.summary.message}</FormFeedback>}
+          </FormGroup>
 
-                <Button
-                  color='primary'
-                  className='me-1'
-                >
-                  Lưu
-                </Button>
+          <FormGroup>
+            <Label for="age">Độ tuổi</Label>
+            <Input
+              id="age"
+              name="age"
+              type="number"
+              {...register('age')}
+              invalid={errors.age ? true : false}
+            />
+            {errors.age && <FormFeedback>{errors.age.message}</FormFeedback>}
+          </FormGroup>
 
-              )}
-
-              <Button color='secondary' outline onClick={(e) => {
-                navigate("/manager/chairCategory")
-                parentCallback(false)
-                e.preventDefault()
-              }}>
-                Hủy
-              </Button>
-            </Col>
-          </Row>
-        </form>
-
+          <Button type="submit" color="primary">Thêm</Button>
+        </Form>
       </CardBody>
     </Card>
-  )
-}
+  );
+};
 
-
-export default FormMovie
+export default FormMovie;

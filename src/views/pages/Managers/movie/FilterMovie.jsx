@@ -17,7 +17,7 @@ const FilterMovie = (listNameUsed) => {
   useEffect(() => alias && toggleCanvasEnd(), [alias])
 
   const toggleCanvasStart = () => {
-    navigate("/manager/chairCategory")
+    navigate("/manager/movie")
     setCanvasPlacement('start')
     setCanvasOpen(!canvasOpen)
   }
@@ -35,13 +35,13 @@ const FilterMovie = (listNameUsed) => {
       {/* <Toaster /> */}
       <div className='btn-wrap'>
         <div className='demo-inline-spacing'>
-          {/* <Link to={`/manager/chairCategory/add-chair-category`}> */}
+          <Link to={`/manager/movie/add-movie`}>
           <Button color='primary'>
             Thêm
           </Button>
-          {/* </Link> */}
+          </Link>
           <Offcanvas className='wrap-form w-50' direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasStart}>
-            <OffcanvasHeader toggle={toggleCanvasStart}>Thêm loại ghế</OffcanvasHeader>
+            <OffcanvasHeader toggle={toggleCanvasStart}>Thêm phim</OffcanvasHeader>
             <OffcanvasBody
               className={classnames({
                 'my-auto mx-0 flex-grow-0': canvasPlacement === 'start' || canvasPlacement === 'end'

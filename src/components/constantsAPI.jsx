@@ -12,3 +12,4 @@ export const API_SHOWTIME = 'http://localhost:8080/api/show_times';
 export const API_PRODUCER = 'http://localhost:8080/api/suppliers';
 export const API_FOODCATEGORY = 'http://localhost:8080/api/food_categories';
 export const API_FILM = 'http://localhost:8080/api/phims';
+export const API_CATEGORIES = 'http://localhost:8080/api/categories';
