@@ -276,7 +276,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* cinema */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='cinema' className='form-label'>
                 Rạp chiếu <span>*</span>
               </Label>
               <Controller
@@ -285,6 +285,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id="cinema"
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
@@ -304,7 +305,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* room */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='room' className='form-label'>
                 Phòng chiếu <span>*</span>
               </Label>
               <Controller
@@ -313,6 +314,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id='room'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
@@ -333,7 +335,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* movie */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='movie' className='form-label'>
                 Phim chiếu <span>*</span>
               </Label>
               <Controller
@@ -342,6 +344,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id='movie'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
@@ -361,7 +364,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* time_start */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='time_start' className='form-label'>
                 Thời gian bắt đầu <span>*</span>
               </Label>
               <Controller
@@ -371,6 +374,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                   <DatePicker
                     {...field}
                     showTime
+                    id='time_start'
                     className='w-100'
                     style={{ maxHeight: '55%' }}
                     onChange={(value, dateString) => {
@@ -387,7 +391,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* format */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='format' className='form-label'>
                 Định dạng chiếu <span>*</span>
               </Label>
               <Controller
@@ -396,6 +400,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id='format'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
@@ -415,7 +420,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* language */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='language' className='form-label'>
                 Ngôn ngữ của phim <span>*</span>
               </Label>
               <Controller
@@ -423,6 +428,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 control={control}
                 render={({ field }) =>
                   <Input
+                    id='language'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                     type="select"
@@ -443,7 +449,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* type */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='type' className='form-label'>
                 Loại suất chiếu <span>*</span>
               </Label>
               <Controller
@@ -452,6 +458,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id='type'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
@@ -471,7 +478,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* statusShowTime */}
             <Col md='6' className='mb-3'>
-              <Label className='form-label'>
+              <Label for='statusShowTime' className='form-label'>
                 Trạng thái của lịch chiếu <span>*</span>
               </Label>
               <Controller
@@ -480,6 +487,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) => (
                   <Input
                     type="select"
+                    id='statusShowTime'
                     {...field}
                     onChange={(e) => {
                       field.onChange(e.target.value);  // Đảm bảo giá trị được cập nhật đúng cách
@@ -502,7 +510,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
 
             {/* voucher */}
             <Col md='12' className='mb-5'>
-              <Label className='form-label'>
+              <Label for='voucher' className='form-label'>
                 Chương trình khuyến mãi
               </Label>
               <Controller
@@ -511,6 +519,7 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
                 render={({ field }) =>
                   <Input
                     type="select"
+                    id='voucher'
                     {...field}
                     className={`form-select ${!field.value ? 'none_Selected' : ''}`}
                   >
