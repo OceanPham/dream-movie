@@ -21,6 +21,7 @@ import FoodCategory from "../views/pages/Managers/FoodCategory";
 import Profile from "../views/pages/Dashboard/Profile";
 import Movie from "../views/pages/Managers/movie";
 import DefaultAlert from "../views/components/DefaultAlert";
+import Films from "../views/pages/Managers/Films";
 
 const AppRouter = ({ setSelectedKey }) => {
   return (
@@ -197,6 +198,22 @@ const AppRouter = ({ setSelectedKey }) => {
         element={
           <PrivateRoute>
             <DefaultAlert />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/movie"
+        element={
+          <PrivateRoute>
+            <Films setSelectedKey={setSelectedKey} />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/manager/movie/:alias"
+        element={
+          <PrivateRoute>
+            <Films setSelectedKey={setSelectedKey} />
           </PrivateRoute>
         }
       />

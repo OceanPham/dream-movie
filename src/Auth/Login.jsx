@@ -1,15 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Radio,
-  DatePicker,
-  Select,
-  Row,
-  Col,
-  Modal,
-} from "antd";
+import { Button, Checkbox, Form, Input, Radio, DatePicker, Select, Row, Col, Modal, } from "antd";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import moment, { now } from "moment";
@@ -21,13 +10,9 @@ import { useGetALLUser } from "../views/pages/Managers/Showtime/hook";
 const { Option } = Select;
 
 // Danh sách 63 tỉnh thành Việt Nam
-const provinces = [
-  "An Giang","Bà Rịa - Vũng Tàu","Bạc Liêu","Bắc Giang","Bắc Kạn","Bắc Ninh","Bến Tre","Bình Dương","Bình Định","Bình Phước","Bình Thuận","Cà Mau","Cao Bằng","Cần Thơ",
-  "Đà Nẵng","Đắk Lắk","Đắk Nông","Điện Biên","Đồng Nai","Đồng Tháp","Gia Lai","Hà Giang","Hà Nam","Hà Nội","Hà Tĩnh","Hải Dương","Hải Phòng","Hậu Giang","Hòa Bình",
-  "Hưng Yên","Khánh Hòa","Kiên Giang","Kon Tum","Lai Châu","Lâm Đồng","Lạng Sơn","Lào Cai","Long An","Nam Định","Nghệ An","Ninh Bình","Ninh Thuận","Phú Thọ","Phú Yên",
-  "Quảng Bình","Quảng Nam","Quảng Ngãi","Quảng Ninh","Quảng Trị","Sóc Trăng","Sơn La","Tây Ninh","Thái Bình","Thái Nguyên","Thanh Hóa","Thừa Thiên Huế","Tiền Giang",
-  "TP. Hồ Chí Minh","Trà Vinh","Tuyên Quang","Vĩnh Long","Vĩnh Phúc","Yên Bái",
-];
+
+const provinces = ["An Giang", "Bà Rịa - Vũng Tàu", "Bạc Liêu", "Bắc Giang", "Bắc Kạn", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Định", "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Cần Thơ", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái",];
+
 
 const validateMessages = {
   required: "${label} không được bỏ trống!",
@@ -47,12 +32,21 @@ const Login = () => {
   const { status, data: dataUser } = useGetALLUser();
 
   const onFinish = (values) => {
-    console.log("Success:", values);
-    localStorage.setItem("users", "loggedin");
+
+    const validUser = dataUser?.find((user) =>
+      user?.email === values?.email,
+    );
+
+    console.log('validUser: ', validUser);
+
+    if (validUser) {
+      toast.warning('Email này đã được sử dụng, vui lòng chọn địa chỉ email khác!')
+      return
+    }
 
     const db_submit = {
       role: {
-        id: parseInt(values?.role) || 1,
+        id: 3,
       },
       full_name: values.fullname || "",
       gender: values.gender,
@@ -71,6 +65,7 @@ const Login = () => {
         toast.success("Đăng ký tài khoản thành công!");
         setTimeout(() => {
           navigate("/login");
+          setMode('login')
         }, 3000);
       },
       onError: () => toast.error("Đăng ký tài khoản thất bại!"),
@@ -78,21 +73,17 @@ const Login = () => {
   };
 
   const onFinishLogin = (values) => {
-    console.log("Login:", values);
-    console.log("Danh sách các user hiện tại đang có:", dataUser);
-
     const foundUser = dataUser?.find(
       (user) =>
-        user.email === values.username && user.password === values.password,
+        user.email == values.username && user.password === values.password,
     );
 
     if (foundUser) {
       // Đăng nhập thành công
       localStorage.setItem("userData", JSON.stringify(foundUser)); // Chuyển đối tượng thành chuỗi JSON
       toast.success("Đăng nhập thành công!");
-      navigate("/dashboard"); // Điều hướng đến trang dashboard hoặc trang khác
+      navigate("/");
     } else {
-      // Thông báo lỗi nếu tài khoản không tồn tại
       toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
     }
   };
@@ -372,10 +363,10 @@ const Login = () => {
                         value
                           ? Promise.resolve()
                           : Promise.reject(
-                              new Error(
-                                "Vui lòng đồng ý với các điều khoản sử dụng",
-                              ),
+                            new Error(
+                              "Vui lòng đồng ý với các điều khoản sử dụng",
                             ),
+                          ),
                     },
                   ]}
                 >

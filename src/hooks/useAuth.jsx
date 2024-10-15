@@ -1,7 +1,7 @@
 
 const useAuth = () => {
 
-    const userInfo = localStorage.getItem('users')
+    const userInfo = localStorage.getItem('userData')
     return !!userInfo
 }
 
