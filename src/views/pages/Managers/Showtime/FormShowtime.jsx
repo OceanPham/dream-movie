@@ -16,6 +16,8 @@ const schema = Yup.object().shape({
     .required('Vui lòng chọn một bộ phim.'),
   cinema: Yup.string()
     .required('Vui lòng chọn rạp chiếu.'),
+  statusShowTime: Yup.string()
+    .required('Vui lòng chọn trạng thái cho lịch chiếu.'),
   room: Yup.string()
     .required('Vui lòng chọn phòng chiếu.'),
   format: Yup.string()
@@ -89,19 +91,6 @@ const FormShowtime = ({ parentCallback, listShowTime }) => {
       if (startTimeExisting <= startTime && startTime <= endTimeExisting) return false
     }
     return true;
-
-    // listShowTime && listShowTime?.listShowTime?.length > 0 && listShowTime?.listShowTime?.map((item) => {
-    //   const startTimeExisting = new Date(item?.start_time).getTime();
-    //   const durationItem = convertDurationToMs(item?.film?.thoiluong || "00:00:00")
-    //   const endTimeExisting = new Date(startTimeExisting + durationItem)
-
-    //   if (startTime <= startTimeExisting && startTimeExisting <= endTime) return false
-    //   if (startTime <= startTimeExisting && (startTimeExisting <= endTime || endTimeExisting <= endTime)) return false
-    //   if (startTimeExisting <= startTime && (startTime <= endTimeExisting || endTime <= endTimeExisting)) return false
-    //   if (startTimeExisting <= startTime && startTime <= endTimeExisting) return false
-
-    //   return true;
-    // })
 
   }
 

@@ -130,7 +130,7 @@ const TableChairCategory = () => {
 
                 {dataListChairCategory?.length > 0 ? dataListChairCategory.sort((a, b) => b.id - a.id).slice(startIndex, endIndex).map((item, index) => {
                   return (
-                    <tr>
+                    <tr key={item?.id}>
                       <td className='ps-3'>
                         {index + 1 + startIndex}
                       </td>

@@ -63,7 +63,7 @@ const errNotice = {
     "6E.9": "Phòng bạn chọn không nằm trong rạp đã chọn, vui lòng kiểm tra lại.",
     "6E.10": "Vui lòng chọn định dạng chiếu.",
     "6E.11": "Vui lòng chọn ngôn ngữ cho phim.",
-    "6E.12": "Vui lòng chọn loại suất chiếu cho phim.",
+    "6E.12": "Vui lòng chọn loại suất chiếu.",
     "6E.13": "Vui lòng chọn trạng thái cho lịch chiếu.",
     "6E.14": "Lỗi phân quyền! Bạn không được phân quyền thêm lịch chiếu."
 };
@@ -107,7 +107,7 @@ describe('FormShowtime', () => {
         );
     };
 
-    test('func check Cinema field is empty (TC 1)', async () => {
+    test('func check Movie field is empty (TC 1)', async () => {
         setup();
 
         const cinema = screen.getByLabelText('Rạp chiếu *');
@@ -189,7 +189,6 @@ describe('FormShowtime', () => {
         await expect(schema.validate(data)).rejects.toThrow(errNotice['6E.5']);
     });
 
-
     test('func check Time Start field is before current (TC 6)', async () => {
         setup(); // Gọi hàm setup để render form
 
@@ -210,6 +209,186 @@ describe('FormShowtime', () => {
 
         const data = { time_start: formattedFutureDate };
         await expect(schema.validate(data)).rejects.toThrow(errNotice['6E.6']);
+    });
+
+    test('func check Cinema field is empty (TC 7)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: '' } });
+        fireEvent.change(room, { target: { value: 1 } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: 1 } });
+        fireEvent.change(language, { target: { value: 1 } });
+        fireEvent.change(type, { target: { value: 1 } });
+        fireEvent.change(statusShowTime, { target: { value: 1 } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.7'])).toBeInTheDocument();
+
+    });
+
+    test('func check Room field is empty (TC 8)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: 1 } });
+        fireEvent.change(room, { target: { value: '' } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: 1 } });
+        fireEvent.change(language, { target: { value: 1 } });
+        fireEvent.change(type, { target: { value: 1 } });
+        fireEvent.change(statusShowTime, { target: { value: 1 } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.8'])).toBeInTheDocument();
+
+    });
+
+    test('func check Format field is empty (TC 10)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: 1 } });
+        fireEvent.change(room, { target: { value: 1 } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: '' } });
+        fireEvent.change(language, { target: { value: 1 } });
+        fireEvent.change(type, { target: { value: 1 } });
+        fireEvent.change(statusShowTime, { target: { value: 1 } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.10'])).toBeInTheDocument();
+
+    });
+
+    test('func check Language field is empty (TC 11)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: 1 } });
+        fireEvent.change(room, { target: { value: 1 } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: 1 } });
+        fireEvent.change(language, { target: { value: '' } });
+        fireEvent.change(type, { target: { value: '' } });
+        fireEvent.change(statusShowTime, { target: { value: 1 } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.11'])).toBeInTheDocument();
+
+    });
+
+    test('func check Type field is empty (TC 12)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: 1 } });
+        fireEvent.change(room, { target: { value: 1 } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: 1 } });
+        fireEvent.change(language, { target: { value: 1 } });
+        fireEvent.change(type, { target: { value: '' } });
+        fireEvent.change(statusShowTime, { target: { value: 1 } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.12'])).toBeInTheDocument();
+
+    });
+
+    test('func check Status Showtime field is empty (TC 13)', async () => {
+        setup();
+
+        const cinema = screen.getByLabelText('Rạp chiếu *');
+        const room = screen.getByLabelText('Phòng chiếu *');
+        const movie = screen.getByLabelText('Phim chiếu *');
+        const timeStart = screen.getByLabelText('Thời gian bắt đầu *');
+        const format = screen.getByLabelText('Định dạng chiếu *');
+        const language = screen.getByLabelText('Ngôn ngữ của phim *');
+        const type = screen.getByLabelText('Ngôn ngữ của phim *');
+        const statusShowTime = screen.getByLabelText('Trạng thái của lịch chiếu *');
+        const voucher = screen.getByLabelText('Chương trình khuyến mãi');
+
+        fireEvent.change(cinema, { target: { value: 1 } });
+        fireEvent.change(room, { target: { value: 1 } });
+        fireEvent.change(movie, { target: { value: 1 } });
+        fireEvent.change(timeStart, { target: { value: '' } });
+        fireEvent.change(format, { target: { value: 1 } });
+        fireEvent.change(language, { target: { value: 1 } });
+        fireEvent.change(type, { target: { value: '' } });
+        fireEvent.change(statusShowTime, { target: { value: '' } });
+        fireEvent.change(voucher, { target: { value: 1 } });
+        expect(timeStart.value).toBe('');
+
+        fireEvent.click(screen.getByText('Lưu'));
+        // Kiểm tra thông báo lỗi khi không có lựa chọn
+        expect(await screen.findByText(errNotice['6E.13'])).toBeInTheDocument();
+
     });
 
 });

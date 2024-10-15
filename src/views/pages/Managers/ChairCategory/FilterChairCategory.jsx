@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap'
 import FormChairCategory from './FormChairCategory'
+import React from 'react';
 
 const FilterChairCategory = (listNameUsed) => {
   const [canvasPlacement, setCanvasPlacement] = useState('start')
