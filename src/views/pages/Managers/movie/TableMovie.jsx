@@ -63,7 +63,7 @@ const TableMovie = () => {
         MySwal.fire({
           icon: 'error',
           title: 'Lỗi phân quyền!',
-          text: 'Bạn không được phân quyền xóa loại ghế.',
+          text: 'Bạn không được phân quyền xóa phim.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -72,7 +72,7 @@ const TableMovie = () => {
       else if (result.isConfirmed) {
         const waitingToast = MySwal.fire({
           title: 'Đang xóa!',
-          text: 'Loại ghế đang được xóa, vui lòng đợi!',
+          text: 'Phim đang được xóa, vui lòng đợi!',
           icon: 'info',
           showConfirmButton: false,
           allowOutsideClick: false,

@@ -92,7 +92,7 @@ describe('FormFoodCategory', () => {
         expect(await screen.findByText(errNotice['7E.3'])).toBeInTheDocument();
     });
 
-    test('func check chairCategory start with number (TC 4)', async () => {
+    test('func check foodCategory start with number (TC 4)', async () => {
         setup();
 
         // Setup dữ liệu demo cho các trường
@@ -112,7 +112,7 @@ describe('FormFoodCategory', () => {
         expect(await screen.findByText(errNotice['7E.4'])).toBeInTheDocument();
     });
 
-    test('func check chairCategory is Used (TC 5)', async () => {
+    test('func check foodCategory is Used (TC 5)', async () => {
         setup();
 
         // Setup dữ liệu demo cho các trường
