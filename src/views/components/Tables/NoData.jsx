@@ -1,3 +1,5 @@
+import React from 'react'
+
 const NoData = () => {
     return <span style={{
         background: '#efebe854',
