@@ -66,7 +66,7 @@ export const useAddFilm = () => {
 
 
 const deleteFilm = async (id) => {
-  const response = await axios.delete(`${API_FILM}`);
+  const response = await axios.delete(`${API_FILM}/${id}`);
   return response.data;
 };
 

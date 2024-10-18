@@ -252,6 +252,7 @@ const FormMovie = ({ parentCallback, listNameUsed }) => {
                 {...field}
                 type='file'
                 placeholder="Chọn ảnh phim"
+                data-testid="image"
               />}
             />
 
