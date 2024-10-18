@@ -19,12 +19,7 @@ jest.mock('react-toastify', () => ({
     },
 }));
 
-// jest.mock('../src/views/pages/Managers/ChairCategory/hook', () => ({
-//     useAddChairCategory: jest.fn(() => ({
-//         status: 'idle',
-//         mutate: jest.fn()
-//     }))
-// }));
+
 jest.mock('../src/views/pages/Managers/ChairCategory/hook', () => ({
     useAddChairCategory: jest.fn(() => ({
         status: 'idle',
@@ -258,61 +253,8 @@ describe('FormChairCategory', () => {
     });
 
 
-    // test('func check Role user logged in', async () => {
-    //     setup();
-
-    //     // Setup dữ liệu demo cho các trường
-    //     const chairNameInput = screen.getByPlaceholderText('Nhập vào tên loại ghế');
-    //     const descriptionInput = screen.getByPlaceholderText('Nhập mô tả về loại ghế');
-    //     const priceInput = screen.getByPlaceholderText('Nhập vào giá vé của loại ghế');
-    //     const quantityInput = screen.getByPlaceholderText('Nhập vào số ghế tối đa có trong một phòng');
-
-    //     // Nhập dữ liệu vào các trường input sử dụng fireEvent.change
-    //     fireEvent.change(chairNameInput, { target: { value: 'VIP4' } });
-    //     fireEvent.change(descriptionInput, { target: { value: 'Loại ghế sofa' } });
-    //     fireEvent.change(priceInput, { target: { value: 30000 } });
-    //     fireEvent.change(quantityInput, { target: { value: 100 } });
-
-    //     // Bấm nút "Lưu" mà không nhập bất kỳ dữ liệu nào
-    //     fireEvent.click(screen.getByText('Lưu'));
-
-    //     // Kiểm tra các thông báo lỗi validate
-    //     // expect(await screen.findByText(errNotice['4E.15'])).toBeInTheDocument();
-    //     // Kiểm tra toast.error đã được gọi với thông báo đúng
-    //     expect(toast.error).toHaveBeenCalledWith(errNotice['4E.15']);
-
-    // });
 
 
-
-    // test('func check Add ChairCategory Success', async () => {
-    //     setup();
-
-    //     // Setup dữ liệu demo cho các trường
-    //     const chairNameInput = screen.getByPlaceholderText('Nhập vào tên loại ghế');
-    //     const descriptionInput = screen.getByPlaceholderText('Nhập mô tả về loại ghế');
-    //     const priceInput = screen.getByPlaceholderText('Nhập vào giá vé của loại ghế');
-    //     const quantityInput = screen.getByPlaceholderText('Nhập vào số ghế tối đa có trong một phòng');
-
-    //     await fireEvent.change(chairNameInput, { target: { value: 'VIP4' } });
-    //     await fireEvent.change(descriptionInput, { target: { value: 'Loại ghế sofa' } });
-    //     await fireEvent.change(priceInput, { target: { value: 30000 } });
-    //     await fireEvent.change(quantityInput, { target: { value: 100 } });
-
-    //     // Bấm nút "Lưu"
-    //     console.log('Before submit');
-    //     fireEvent.click(screen.getByRole('button', { name: /Lưu/i }));
-    //     console.log('After submit');
-
-    //     // Kiểm tra xem hàm mutate đã được gọi chưa
-    //     expect(mockMutate).toHaveBeenCalledTimes(1);
-
-    //     // Chờ và kiểm tra xem toast.success đã được gọi chưa
-    //     await waitFor(() => expect(toast.success).toHaveBeenCalledTimes(1));
-
-    //     // Kiểm tra nội dung của toast
-    //     expect(toast.success).toHaveBeenCalledWith('Thêm loại ghế thành công!');
-    // });
 
 
 });

@@ -10,9 +10,77 @@ import { useGetALLUser } from "../views/pages/Managers/Showtime/hook";
 const { Option } = Select;
 
 // Danh sách 63 tỉnh thành Việt Nam
+<<<<<<< HEAD
 
 const provinces = ["An Giang", "Bà Rịa - Vũng Tàu", "Bạc Liêu", "Bắc Giang", "Bắc Kạn", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Định", "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Cần Thơ", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái",];
 
+=======
+const provinces = [
+  "An Giang",
+  "Bà Rịa - Vũng Tàu",
+  "Bạc Liêu",
+  "Bắc Giang",
+  "Bắc Kạn",
+  "Bắc Ninh",
+  "Bến Tre",
+  "Bình Dương",
+  "Bình Định",
+  "Bình Phước",
+  "Bình Thuận",
+  "Cà Mau",
+  "Cao Bằng",
+  "Cần Thơ",
+  "Đà Nẵng",
+  "Đắk Lắk",
+  "Đắk Nông",
+  "Điện Biên",
+  "Đồng Nai",
+  "Đồng Tháp",
+  "Gia Lai",
+  "Hà Giang",
+  "Hà Nam",
+  "Hà Nội",
+  "Hà Tĩnh",
+  "Hải Dương",
+  "Hải Phòng",
+  "Hậu Giang",
+  "Hòa Bình",
+  "Hưng Yên",
+  "Khánh Hòa",
+  "Kiên Giang",
+  "Kon Tum",
+  "Lai Châu",
+  "Lâm Đồng",
+  "Lạng Sơn",
+  "Lào Cai",
+  "Long An",
+  "Nam Định",
+  "Nghệ An",
+  "Ninh Bình",
+  "Ninh Thuận",
+  "Phú Thọ",
+  "Phú Yên",
+  "Quảng Bình",
+  "Quảng Nam",
+  "Quảng Ngãi",
+  "Quảng Ninh",
+  "Quảng Trị",
+  "Sóc Trăng",
+  "Sơn La",
+  "Tây Ninh",
+  "Thái Bình",
+  "Thái Nguyên",
+  "Thanh Hóa",
+  "Thừa Thiên Huế",
+  "Tiền Giang",
+  "TP. Hồ Chí Minh",
+  "Trà Vinh",
+  "Tuyên Quang",
+  "Vĩnh Long",
+  "Vĩnh Phúc",
+  "Yên Bái",
+];
+>>>>>>> parent of 2ef8e93 (update không có gì)
 
 const validateMessages = {
   required: "${label} không được bỏ trống!",
@@ -92,78 +160,86 @@ const Login = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const validatePassword = (_, value) => {//1
-    if (!value) {//2
+  const validatePassword = (_, value) => {
+    //1
+    if (!value) {
+      //2
       return Promise.reject(new Error("Mật khẩu không được bỏ trống!")); //3
     }
-    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,50}$/.test(value)) {//4
-    return Promise.reject(new Error("Mật khẩu phải chứa ít nhất 1 chữ in hoa, 1 chữ thường, 1 chữ số và 1 ký tự đặc biệt!",),
-  );
+    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,50}$/.test(value)) {
+      //4
+      return Promise.reject(
+        new Error(
+          "Mật khẩu phải chứa ít nhất 1 chữ in hoa, 1 chữ thường, 1 chữ số và 1 ký tự đặc biệt!",
+        ),
+      ); //5
     }
     return Promise.resolve(); // 6
   };
 
-  const validateConfirmPassword = ({ getFieldValue }) => ({ //1
-    validator(_, value) { //2
-      if (!value) { //3
+  const validateConfirmPassword = ({ getFieldValue }) => ({
+    //1
+    validator(_, value) {
+      //2
+      if (!value) {
+        // 3
         return Promise.reject(new Error("Mật khẩu không được để trống")); // 4
       }
-      if (getFieldValue("password") === value) { //5
+      if (getFieldValue("password") === value) {
+        // 5
         return Promise.resolve(); // 6
       }
       return Promise.reject(new Error("Mật khẩu nhập lại không khớp!")); // 7
     },
   });
 
-  const validateFullname = (_, value) => { //1
-    const regex = /^[a-zA-ZÀ-ỹ\s]+$/; //2
-    if (!value) { //3
-      return Promise.reject(new Error("Họ và tên không được bỏ trống!")); //4
+  const validateFullname = (_, value) => {
+    const regex = /^[a-zA-ZÀ-ỹ\s]{1,50}$/;
+    if (!value) {
+      return Promise.reject(new Error("Họ và tên không được bỏ trống!"));
     }
-    if (value.length > 50) { //5
-      return Promise.reject(new Error("Họ và tên không được dài quá 50 ký tự!")); //6
+    if (!regex.test(value)) {
+      return Promise.reject(
+        new Error("Họ và tên không được chứa số và ký tự đặc biệt!"),
+      );
     }
-    if (!regex.test(value)) { //7
-      return Promise.reject(new Error("Họ và tên không được chứa số và ký tự đặc biệt!")); //8
-    }
-    return Promise.resolve(); //9
-  };
-  
-
-  const validateBirthday = (_, value) => { //1
-    if (!value) { //2
-      return Promise.reject(new Error("Vui lòng chọn ngày sinh!")); //3
-    }
-    const fourteenYearsAgo = moment().subtract(14, "years"); //4
-    if (value.isAfter(fourteenYearsAgo)) { //5
-      return Promise.reject(new Error("Tuổi phải lớn hơn 14!")); //6
-    }
-    return Promise.resolve(); //7
+    return Promise.resolve();
   };
 
-  const validatePhoneNumber = (_, value) => { //1
-    const regex = /^0\d{9}$/; //2
-    if (!value) { //3
-      return Promise.reject(new Error("Vui lòng nhập số điện thoại!")); //4
+  const validateBirthday = (_, value) => {
+    if (!value) {
+      return Promise.reject(new Error("Vui lòng chọn ngày sinh!"));
     }
-    if (!regex.test(value)) { //5
-      return Promise.reject(new Error("Số điện thoại không hợp lệ!")); //6
+    const fourteenYearsAgo = moment().subtract(14, "years");
+    if (value.isAfter(fourteenYearsAgo)) {
+      return Promise.reject(new Error("Tuổi phải lớn hơn 14!"));
     }
-    return Promise.resolve(); //7
+    return Promise.resolve();
   };
 
-  const validateEmail = (_, value) => { //1
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; //2
-    if (!value) { //3
-      return Promise.reject(new Error("Vui lòng nhập email!")); //4
+  const validatePhoneNumber = (_, value) => {
+    const regex = /^0\d{9}$/;
+    if (!value) {
+      return Promise.reject(new Error("Vui lòng nhập số điện thoại!"));
     }
-    if (value.length > 254) { //5
-      return Promise.reject(new Error("Email vượt quá giới hạn 254 ký tự!")); //6
+    if (!regex.test(value)) {
+      return Promise.reject(new Error("Số điện thoại không hợp lệ!"));
     }
-    if (!emailRegex.test(value)) { //7
-      return Promise.reject(new Error("Email không hợp lệ!")); //8
+    return Promise.resolve();
+  };
+
+  const validateEmail = (_, value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!value) {
+      return Promise.reject(new Error("Vui lòng nhập email!"));
     }
-    return Promise.resolve(); //9
+    if (value.length > 254) {
+      return Promise.reject(new Error("Email vượt quá giới hạn 254 ký tự!"));
+    }
+    if (!emailRegex.test(value)) {
+      return Promise.reject(new Error("Email không hợp lệ!"));
+    }
+    return Promise.resolve();
   };
 
   return (
